@@ -1,11 +1,11 @@
 import _, { Dictionary } from "lodash";
 import Edge from "../models/edge";
+import IGraphManager from "./graphManagerInterface"
 
 /**
  * Utility class which provides basic operaions on graph like adding/removing edges and tree initialization
  */
-
-class GraphManager {
+class GraphManager implements IGraphManager {
     vertices: Array<number>;
     vertexToIndex: Dictionary<number>;
     numbers: Set<number>;
@@ -52,7 +52,7 @@ class GraphManager {
         return this.vertices.length - 1
     }
 
-    addEgde(edge: Edge) {
+    addEgde(edge: Edge): void {
         let edgeNumber: number = this.edgeToNumber(edge)
         if (this.notInitializedNumbers.delete(edgeNumber)) {
             this.numbers.add(edgeNumber)
@@ -64,11 +64,13 @@ class GraphManager {
         return this.numbers.has(edgeNumber) && !this.notInitializedNumbers.has(edgeNumber)
     }
 
-    removeEdge(edge: Edge) {
+    removeEdge(edge: Edge): Boolean {
         let edgeNumber: number = this.edgeToNumber(edge)
         if (this.numbers.delete(edgeNumber)) {
             this.notInitializedNumbers.add(edgeNumber)
-        } 
+            return true
+        }
+        return false
     }
     
     addNumber(number: number) {
@@ -91,14 +93,14 @@ class GraphManager {
         return Array.from(this.notInitializedNumbers).map((x) => this.numberToEdge(x))
     }
 
-    addRandomEdge() {
+    addRandomEdge(): void {
         let randomEgdeNumber: number | undefined = _.sample(Array.from(this.notInitializedNumbers))
         if (randomEgdeNumber && randomEgdeNumber >= 0) {
             this.addNumber(randomEgdeNumber)
         }
     }
 
-    addRandomEdgesSize(size: number) {
+    addRandomEdgesSize(size: number): void {
        _.forEach(_.sampleSize(Array.from(this.notInitializedNumbers), size), (x) => this.addNumber(x))
     }
 }
