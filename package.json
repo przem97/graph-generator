@@ -2,7 +2,7 @@
   "name": "graph-solver",
   "version": "1.0.0",
   "description": "A simple project for graph generation and playground for different graph algorithms",
-  "main": "index.ts",
+  "main": "src/index.ts",
   "author": "przem7",
   "license": "ISC",
   "homepage": "https://github.com/przem7/graph-solver#readme",
@@ -11,7 +11,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "nodemon index.ts"
+    "start": "npx ts-node src/index.ts",
+    "watch": "nodemon src/index.ts"
   },
   "repository": {
     "type": "git",
