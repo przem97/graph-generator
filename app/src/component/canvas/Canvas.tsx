@@ -1,22 +1,24 @@
 
 import React, { useRef, useEffect, useLayoutEffect } from 'react';
-import ICanvasDrawer from '../../draw/drawer.interface';
+import { IGridDrawer, INodeDrawer } from '../../draw';
+import Node from '../../model/node';
 import { NodeDrawingStrategy } from '../../draw/strategy/node.draw.strategy';
 import { useDispatch, useSelector } from 'react-redux';
 import { add, remove, edit, StrategyState } from '../../redux/strategy/draw/drawStrategySlice'
 
 interface CanvasProps {
-  drawer: ICanvasDrawer,
+  canvasDrawer: IGridDrawer,
+  nodeDrawer: INodeDrawer
 }
 
-export default function Canvas({ drawer } : CanvasProps) {
+export default function Canvas({ canvasDrawer, nodeDrawer } : CanvasProps) {
     const canvasRef = useRef(null)
     const strategy = useSelector<StrategyState, NodeDrawingStrategy>(state => state.strategy);
     const dispatch = useDispatch();
 
     const drawCanvas = () => {
-      const canvas : any = canvasRef.current
-      const context : CanvasRenderingContext2D = canvas.getContext('2d')
+      const canvas : any = canvasRef.current;
+      const context : CanvasRenderingContext2D = canvas.getContext('2d');
 
       // Set display size (css pixels).
       const canvasWidth = window.innerWidth - 70;
@@ -33,17 +35,18 @@ export default function Canvas({ drawer } : CanvasProps) {
       context.scale(scale, scale);
 
       // START DRAWINGS
-
-      drawer.draw(canvas)
+      canvasDrawer.draw(canvas);
 
       // END DRAWINGS
-
       context.scale(1 / scale, 1 / scale);
     }
 
     const drawNode = (event : PointerEvent) => {
-      // TODO: handle click event
-      
+      const canvas : any = canvasRef.current;
+
+      const node = Node.fromClickEvent(event, canvas);
+      console.log(node);
+      nodeDrawer.drawNode(canvas, node);
     }
 
     useLayoutEffect(() => {
@@ -52,7 +55,6 @@ export default function Canvas({ drawer } : CanvasProps) {
       window.addEventListener('resize', drawCanvas);
       
       const canvas : any = canvasRef.current
-      console.log(canvas)
       canvas.addEventListener('click', drawNode);
 
       return () => {

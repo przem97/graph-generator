@@ -1,7 +1,7 @@
 import React from 'react';
 import { styled } from 'styled-components';
 
-export const DEFAULT_HEADER_HEIGHT = '50px';
+export const DEFAULT_HEADER_HEIGHT = 50;
 
 export default function Header() {
     return (
@@ -16,7 +16,7 @@ export default function Header() {
 }
 
 type HeaderContainerProps = {
-    headerHeight: string;
+    headerHeight: number;
 }
 
 const HeaderContainer = styled.header<HeaderContainerProps>`
@@ -24,7 +24,7 @@ const HeaderContainer = styled.header<HeaderContainerProps>`
     flex-direction: row;
     position: fixed;
     background-color: rgb(189, 145, 88);
-    height: ${props => props.headerHeight || DEFAULT_HEADER_HEIGHT};
+    height: ${props => `${props.headerHeight}px` || `${DEFAULT_HEADER_HEIGHT}px`};
     top: 0;
     left: 0;
     right: 0;

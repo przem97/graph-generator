@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 import { add, remove, edit } from '../../redux/strategy/draw/drawStrategySlice';
 import { DEFAULT_HEADER_HEIGHT } from '../header/Header';
 
-export const DEFAULT_SIDEBAR_WIDTH = '70px';
+export const DEFAULT_SIDEBAR_WIDTH = 70;
 
 export default function Sidebar() {
     const dispatch = useDispatch();
@@ -40,8 +40,8 @@ export default function Sidebar() {
 }
 
 type SidebarContainerProps = {
-    sidebarWidth: string;
-    top: string;
+    sidebarWidth: number;
+    top: number;
 }
   
 const SidebarContainer = styled.nav<SidebarContainerProps>`
@@ -52,9 +52,9 @@ const SidebarContainer = styled.nav<SidebarContainerProps>`
     background-color: rgb(232, 199, 156);
     /* background-color: #e2b881; */
     left: 0;
-    top: ${props => props.top || '50px'};
+    top: ${props => `${props.top}px` || '50px'};
     bottom: 0;
-    width: ${props => props.sidebarWidth || DEFAULT_SIDEBAR_WIDTH};
+    width: ${props => `${props.sidebarWidth}px` || `${DEFAULT_SIDEBAR_WIDTH}px`};
 `
 
 const GraphActionContainer = styled.div`

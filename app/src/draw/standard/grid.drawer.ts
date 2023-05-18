@@ -1,20 +1,13 @@
-import NodeDrawer from "./node.drawer";
-import ICanvasDrawer from "../drawer.interface";
-import Node from '../../model/node'
+import { IGridDrawer } from "./grid.drawer.interface";
+import { getCanvasCenter } from '../../utils/canvasUtils';
 
-const RADIUS: number = 22;
-const nodesList: Node[] = [];
 const MAIN_AXIS_COLOR: string = "#636363";
 const MINOR_AXIS_COLOR: string = "#dedede";
-const LEADING: number = 15;
-const SQRT_3: number= 1.7320;
+const SQRT_3: number = 1.7320;
 const R: number = 10;
+export const LEADING: number = 15;
 
-export default class GridDrawer implements ICanvasDrawer {
-
-    // constructor(nodeDrawer: NodeDrawer) {
-    //     this.nodeDrawer = nodeDrawer;
-    // }
+export default class GridDrawer implements IGridDrawer {
 
     draw(canvas: HTMLCanvasElement) {
         if (canvas) {
@@ -24,16 +17,7 @@ export default class GridDrawer implements ICanvasDrawer {
             }
         }
     }
-
-    drawCanvasNodes(ctx: CanvasRenderingContext2D, 
-        planeCenterX: number, 
-        planeCenterY: number) {
-        for (var i = 0; i < nodesList.length; i++) {
-            let node: Node = nodesList[i];
-            this.drawNode(ctx, nodesList[i], planeCenterX, planeCenterY);
-        }
-    }
-      
+ 
     drawArrow(context: CanvasRenderingContext2D, 
         fromx: number, 
         fromy: number, 
@@ -71,59 +55,44 @@ export default class GridDrawer implements ICanvasDrawer {
         context.fill();
     }
       
-    drawNode(ctx: CanvasRenderingContext2D,
-        node: Node, 
-        planeCenterX: number,
-        planeCenterY: number) {
-
-        ctx.fillStyle = "#e2b881";
-        ctx.beginPath();
-        ctx.arc(node.x + planeCenterX, node.y + planeCenterY, RADIUS, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.fill();
-    
-    }
-      
     drawCanvasArrows(ctx: CanvasRenderingContext2D,
-        canvas: HTMLCanvasElement,
-        planeCenterX: number,
-        planeCenterY: number) {
+        canvas: HTMLCanvasElement) {
+        const { canvasCenterX, canvasCenterY } = getCanvasCenter(canvas);
 
-        this.drawArrow(ctx, planeCenterX, (canvas.height / window.devicePixelRatio), planeCenterX, 10);
-        this.drawArrow(ctx, 0, planeCenterY, (canvas.width / window.devicePixelRatio) - 10, planeCenterY);
+        this.drawArrow(ctx, canvasCenterX, (canvas.height / window.devicePixelRatio), canvasCenterX, 10);
+        this.drawArrow(ctx, 0, canvasCenterY, (canvas.width / window.devicePixelRatio) - 10, canvasCenterY);
     }
       
     drawCanvasGrid(ctx: CanvasRenderingContext2D,
-        canvas: HTMLCanvasElement,
-        planeCenterX: number,
-        planeCenterY: number) {
-      
-        for (let i = planeCenterX; i < (canvas.width / window.devicePixelRatio); i += LEADING) {
-            this.drawVerticalLine(ctx, canvas, i, planeCenterX, planeCenterY);
+        canvas: HTMLCanvasElement) {
+        const { canvasCenterX, canvasCenterY } = getCanvasCenter(canvas);
+
+        for (let i = canvasCenterX; i < (canvas.width / window.devicePixelRatio); i += LEADING) {
+            this.drawVerticalLine(ctx, canvas, i, canvasCenterX, canvasCenterY);
         }
       
-        for (let i = planeCenterX; i > 0; i -= LEADING) {
-            this.drawVerticalLine(ctx, canvas, i, planeCenterX, planeCenterY);
+        for (let i = canvasCenterX; i > 0; i -= LEADING) {
+            this.drawVerticalLine(ctx, canvas, i, canvasCenterX, canvasCenterY);
         }
         
-        for (let i = planeCenterY; i < (canvas.height / window.devicePixelRatio); i += LEADING) {
-            this.drawHorizontalLine(ctx, canvas, i, planeCenterX, planeCenterY);
+        for (let i = canvasCenterY; i < (canvas.height / window.devicePixelRatio); i += LEADING) {
+            this.drawHorizontalLine(ctx, canvas, i, canvasCenterX, canvasCenterY);
         }
       
-        for (let i = planeCenterY; i > 0; i -= LEADING) {
-            this.drawHorizontalLine(ctx, canvas, i, planeCenterX, planeCenterY);
+        for (let i = canvasCenterY; i > 0; i -= LEADING) {
+            this.drawHorizontalLine(ctx, canvas, i, canvasCenterX, canvasCenterY);
         }
       
         ctx.beginPath();
-        ctx.moveTo(0, planeCenterY);
-        ctx.lineTo(canvas.width, planeCenterY);
+        ctx.moveTo(0, canvasCenterY);
+        ctx.lineTo(canvas.width, canvasCenterY);
         ctx.lineWidth = 1.5;
         ctx.strokeStyle = MAIN_AXIS_COLOR;
         ctx.stroke();
       
         ctx.beginPath();
-        ctx.moveTo(planeCenterX, 0);
-        ctx.lineTo(planeCenterX, canvas.height);
+        ctx.moveTo(canvasCenterX, 0);
+        ctx.lineTo(canvasCenterX, canvas.height);
         ctx.lineWidth = 1.5;
         ctx.strokeStyle = MAIN_AXIS_COLOR;
         ctx.stroke();
@@ -131,13 +100,9 @@ export default class GridDrawer implements ICanvasDrawer {
     }
       
     drawCanvasObjects(ctx: CanvasRenderingContext2D,
-        canvas: HTMLCanvasElement) {
-        const planeCenterY = Math.floor(canvas.height / (2 * window.devicePixelRatio)); 
-        const planeCenterX = Math.floor(canvas.width / (2 * window.devicePixelRatio)); 
-      
-        this.drawCanvasGrid(ctx, canvas, planeCenterX, planeCenterY);
-        this.drawCanvasNodes(ctx, planeCenterX, planeCenterY);
-        this.drawCanvasArrows(ctx, canvas, planeCenterX, planeCenterY);
+                      canvas: HTMLCanvasElement) {
+        this.drawCanvasGrid(ctx, canvas);
+        this.drawCanvasArrows(ctx, canvas);
     }
       
     drawLine(ctx: CanvasRenderingContext2D,
