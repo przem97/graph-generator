@@ -49,7 +49,7 @@ export default class GridDrawer implements ICanvasDrawer {
         context.beginPath();
       
         angle = Math.atan2(toy-fromy, tox-fromx)
-        console.log(angle);
+        
         x = R * Math.cos(angle) + x_center;
         y = R * Math.sin(angle) + y_center;
       

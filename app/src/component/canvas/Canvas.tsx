@@ -41,13 +41,23 @@ export default function Canvas({ drawer } : CanvasProps) {
       context.scale(1 / scale, 1 / scale);
     }
 
+    const drawNode = (event : PointerEvent) => {
+      // TODO: handle click event
+      
+    }
+
     useLayoutEffect(() => {
       drawCanvas();
 
       window.addEventListener('resize', drawCanvas);
+      
+      const canvas : any = canvasRef.current
+      console.log(canvas)
+      canvas.addEventListener('click', drawNode);
 
       return () => {
         window.removeEventListener('resize', drawCanvas);
+        canvas.removeEventListener('click', drawNode);
       }
     }, [])
   

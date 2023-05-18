@@ -4,6 +4,9 @@ import { NodeDrawingStrategy } from '../../draw/strategy/node.draw.strategy';
 import { styled } from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { add, remove, edit } from '../../redux/strategy/draw/drawStrategySlice';
+import { DEFAULT_HEADER_HEIGHT } from '../header/Header';
+
+export const DEFAULT_SIDEBAR_WIDTH = '70px';
 
 export default function Sidebar() {
     const dispatch = useDispatch();
@@ -15,7 +18,7 @@ export default function Sidebar() {
     const editAction = () => dispatch(edit());
 
     return (
-        <SidebarContainer>
+        <SidebarContainer sidebarWidth={DEFAULT_SIDEBAR_WIDTH} top={DEFAULT_HEADER_HEIGHT}>
             <GraphActionContainer>
                 <GraphActionButtonContainer id="add-button" onClick={addAction}>
                     <p>Add</p>
@@ -36,7 +39,12 @@ export default function Sidebar() {
     )
 }
 
-const SidebarContainer = styled.nav`
+type SidebarContainerProps = {
+    sidebarWidth: string;
+    top: string;
+}
+  
+const SidebarContainer = styled.nav<SidebarContainerProps>`
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -44,9 +52,9 @@ const SidebarContainer = styled.nav`
     background-color: rgb(232, 199, 156);
     /* background-color: #e2b881; */
     left: 0;
-    top: 50px;
+    top: ${props => props.top || '50px'};
     bottom: 0;
-    width: 70px;
+    width: ${props => props.sidebarWidth || DEFAULT_SIDEBAR_WIDTH};
 `
 
 const GraphActionContainer = styled.div`
