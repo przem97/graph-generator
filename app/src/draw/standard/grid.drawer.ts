@@ -1,4 +1,4 @@
-import { IGridDrawer } from "./grid.drawer.interface";
+import { IGridDrawer } from "./interface/grid.drawer.interface";
 import { getCanvasCenter } from '../../utils/canvasUtils';
 
 const MAIN_AXIS_COLOR: string = "#636363";

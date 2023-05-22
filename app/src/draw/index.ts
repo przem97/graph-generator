@@ -1,2 +1,2 @@
-export * from './standard/grid.drawer.interface';
-export * from './standard/node.drawer.interface';
+export * from './standard/interface/grid.drawer.interface';
+export * from './standard/interface/node.drawer.interface';

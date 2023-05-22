@@ -1,4 +1,4 @@
-import Node from '../../model/node';
+import Node from '../../../model/node';
 
 export interface INodeDrawer {
     drawNode(canvas: HTMLCanvasElement,

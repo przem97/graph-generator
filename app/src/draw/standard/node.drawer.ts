@@ -1,4 +1,4 @@
-import { INodeDrawer } from "./node.drawer.interface";
+import { INodeDrawer } from "./interface/node.drawer.interface";
 import Node from '../../model/node';
 import { getCanvasCenter } from '../../utils/canvasUtils';
 
