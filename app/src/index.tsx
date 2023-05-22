@@ -2,9 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import Page from './component/page/Page';
 import { createGlobalStyle } from 'styled-components';
-import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
-import reducer from './redux/strategy/draw/drawStrategySlice';
+import { store } from './redux/store/store';
 
 const GlobalStyle = createGlobalStyle`
     body {
@@ -13,10 +12,6 @@ const GlobalStyle = createGlobalStyle`
         padding-left: 70px;
     }
 `
-
-const store = configureStore({
-    reducer: reducer
-});
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement

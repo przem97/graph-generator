@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { NodeDrawingStrategy, DEFAULT_STRATEGY } from '../../../draw/strategy/node.draw.strategy';
+import { NodeDrawingStrategy, DEFAULT_STRATEGY } from '../../../../draw/strategy/node.draw.strategy';
 
 export interface StrategyState {
   strategy: NodeDrawingStrategy
