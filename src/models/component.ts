@@ -1,8 +1,9 @@
 import Edge from "./edge";
+import Vertex from "./vertex";
 
 class Component {
     edges: Array<Edge>;
-    vertices: Array<number>;
+    vertices: Array<Vertex>;
     edgesNumber: number;
 
     constructor() {

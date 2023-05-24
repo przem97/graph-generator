@@ -1,12 +1,13 @@
 import _, { Dictionary } from "lodash";
 import Edge from "../models/edge";
+import Vertex from "../models/vertex";
 import IGraphManager from "./graphManagerInterface"
 
 /**
  * Utility class which provides basic operaions on graph like adding/removing edges and tree initialization
  */
 class GraphManager implements IGraphManager {
-    vertices: Array<number>;
+    vertices: Array<Vertex>;
     vertexToIndex: Dictionary<number>;
     numbers: Set<number>;
     notInitializedNumbers: Set<number>;
@@ -18,12 +19,12 @@ class GraphManager implements IGraphManager {
      * are not required to be consecutive numbers (when sorted) since mapping between vertex and specific index is performed.
      * @param {Array.<number>} vertices - The list of vertices
      */
-    constructor(vertices: Array<number>) {
+    constructor(vertices: Array<Vertex>) {
         this.vertices = vertices
         this.vertexToIndex = {}
         
         for (let i = 0; i < this.vertices.length; i += 1) {
-            this.vertexToIndex[this.vertices[i]] = i
+            this.vertexToIndex[this.vertices[i].ordinal] = i
         }
 
         this.numbers = new Set()
@@ -36,7 +37,7 @@ class GraphManager implements IGraphManager {
     }
 
     numberToEdge(number: number): Edge {
-        return new Edge(this.vertices[(number / this.vertices.length) >> 0], this.vertices[number % this.vertices.length])
+        return new Edge(this.vertices[(number / this.vertices.length) >> 0].ordinal, this.vertices[number % this.vertices.length].ordinal)
     }
 
     isFull(): Boolean {
@@ -46,7 +47,7 @@ class GraphManager implements IGraphManager {
 
     initializeTree(): number {
         for (let i = 0; i < (this.vertices.length - 1); i += 1) {
-            let edge: Edge = new Edge(this.vertices[i], this.vertices[i + 1])
+            let edge: Edge = new Edge(this.vertices[i].ordinal, this.vertices[i + 1].ordinal)
             this.addEgde(edge)
         }
         return this.vertices.length - 1

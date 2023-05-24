@@ -1,8 +1,9 @@
 import _ from 'lodash'
 import Component from '../models/component'
+import Vertex from '../models/vertex';
 import GraphManager from '../utils/graphManager'
 import IGraphManager from '../utils/graphManager'
-import IGraphInitializer from './graphInitializerInterface'
+import IGraphInitializer from './interface/graphInitializer.interface'
 
 class GraphInitializer implements IGraphInitializer {
     initializeGraph(totalVertices: number, totalEdges: number, totalComponents: number): Array<Component> { 
@@ -20,13 +21,13 @@ class GraphInitializer implements IGraphInitializer {
     initializeVertices(components: Array<Component>, totalVertices: number): Array<Component> {
         // populate one vertex per component
         for (let i = 0; i < components.length; i += 1) {
-            components[i].vertices.push(i)
+            components[i].vertices.push(new Vertex(i));
         }
 
         // fill components randomly with vertices
         for (let i = components.length; i < totalVertices; i += 1) {
             let componentIndex = Math.floor(Math.random() * components.length)
-            components[componentIndex].vertices.push(i)
+            components[componentIndex].vertices.push(new Vertex(i))
         }
         
         return components
