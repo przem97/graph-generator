@@ -83,11 +83,18 @@ class GraphInitializer implements IGraphInitializer {
             components[i].edges = graphManager.getEdges()
         }
 
-        return components
+        return this.initializeWeights(components);
     }
 
     initializeWeights(components: Array<Component>): Array<Component> {
-        return Array();
+        for (let i = 0; i < components.length; i += 1) {
+            let component = components[i];
+            for (let j = 0; j < component.edges.length; j += 1) {
+                component.edges[j].weight = _.round(_.random(0, 10, true), 2);
+            }
+        }
+
+        return components;
     }
 }
 
