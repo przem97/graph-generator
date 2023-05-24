@@ -1,0 +1,29 @@
+import { createSlice } from '@reduxjs/toolkit';
+import { NodeDrawingStrategy, DEFAULT_STRATEGY } from '../../../../draw/strategy/node.draw.strategy';
+
+export type StrategyStateType = {
+    strategy: NodeDrawingStrategy
+} 
+
+const initialState = {
+    strategy: DEFAULT_STRATEGY
+} as StrategyStateType;
+
+const strategySlice = createSlice({
+    name: 'strategy',
+    initialState,
+    reducers: {
+        setAddStrategy(state): StrategyStateType {
+            return { ...state, strategy: NodeDrawingStrategy.Add };
+        },
+        setRemoveStrategy(state): StrategyStateType {
+            return { ...state, strategy: NodeDrawingStrategy.Remove };
+        },
+        setEditStrategy(state): StrategyStateType {
+            return { ...state, strategy: NodeDrawingStrategy.Edit };
+        }
+    }
+});
+
+export const { setAddStrategy, setRemoveStrategy, setEditStrategy } = strategySlice.actions;
+export default strategySlice.reducer;

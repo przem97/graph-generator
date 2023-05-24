@@ -1,9 +1,8 @@
 import React from 'react';
 
-import { NodeDrawingStrategy } from '../../draw/strategy/node.draw.strategy';
 import { styled } from 'styled-components';
 import { useDispatch } from 'react-redux';
-import { add, remove, edit } from '../../redux/strategy/draw/drawStrategySlice';
+import { setAddStrategy, setRemoveStrategy, setEditStrategy } from '../../redux/reducers/strategy/draw/strategySlice';
 import { DEFAULT_HEADER_HEIGHT } from '../header/Header';
 
 export const DEFAULT_SIDEBAR_WIDTH = 70;
@@ -11,11 +10,9 @@ export const DEFAULT_SIDEBAR_WIDTH = 70;
 export default function Sidebar() {
     const dispatch = useDispatch();
 
-    const addAction = () => dispatch(add());
-
-    const removeAction = () => dispatch(remove());
-
-    const editAction = () => dispatch(edit());
+    const addAction = () => dispatch(setAddStrategy());
+    const removeAction = () => dispatch(setRemoveStrategy());
+    const editAction = () => dispatch(setEditStrategy());
 
     return (
         <SidebarContainer sidebarWidth={DEFAULT_SIDEBAR_WIDTH} top={DEFAULT_HEADER_HEIGHT}>
@@ -34,7 +31,6 @@ export default function Sidebar() {
                     <p>Edit</p>
                 </GraphActionButtonContainer>
             </GraphActionContainer>
-            <div id="like_button_container"></div>
         </SidebarContainer>
     )
 }

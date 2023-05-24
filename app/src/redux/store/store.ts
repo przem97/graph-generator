@@ -1,7 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
+import { useDispatch } from 'react-redux';
 
-import reducer from '../reducers/strategy/draw/drawStrategySlice';
+import { rootReducer } from '../reducers';
 
 export const store = configureStore({
-  reducer: reducer
+  reducer: rootReducer
 });
+
+export type AppDispatch = typeof store.dispatch;

@@ -127,7 +127,7 @@ export default class GridDrawer implements IGridDrawer {
         planeCenterX: number, 
         planeCenterY: number) {
 
-            this.drawLine(ctx, i, 0, i, (canvas.height / window.devicePixelRatio), MINOR_AXIS_COLOR, 1);
+        this.drawLine(ctx, i, 0, i, (canvas.height / window.devicePixelRatio), MINOR_AXIS_COLOR, 1);
             
         if ((i - planeCenterX) % (2 * LEADING) === 0 && (planeCenterX !== i) && (i + ((R / 2) * SQRT_3)) < (canvas.width / window.devicePixelRatio)) {
             this.drawLine(ctx, i, planeCenterY - 5, i, planeCenterY + 5, MAIN_AXIS_COLOR, 1.5);

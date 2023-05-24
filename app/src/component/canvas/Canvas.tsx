@@ -1,71 +1,72 @@
-
 import React, { useRef, useEffect, useLayoutEffect } from 'react';
 import { IGridDrawer, INodeDrawer } from '../../draw';
-import Node from '../../model/node';
+import { NodeType } from '../../model/node';
 import { NodeDrawingStrategy } from '../../draw/strategy/node.draw.strategy';
-import { useDispatch, useSelector } from 'react-redux';
-import { add, remove, edit, StrategyState } from '../../redux/strategy/draw/drawStrategySlice'
+import { addNode, removeNode, editNode } from '../../redux/reducers'
+import { NodeUtils } from '../../model/util/nodeUtils';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { initCanvas } from '../../draw/standard/canvas.drawer';
 
-interface CanvasProps {
+type CanvasProps = {
   canvasDrawer: IGridDrawer,
   nodeDrawer: INodeDrawer
 }
 
 export default function Canvas({ canvasDrawer, nodeDrawer } : CanvasProps) {
-    const canvasRef = useRef(null)
-    const strategy = useSelector<StrategyState, NodeDrawingStrategy>(state => state.strategy);
-    const dispatch = useDispatch();
+    const canvasRef = useRef(null);
 
-    const drawCanvas = () => {
-      const canvas : any = canvasRef.current;
-      const context : CanvasRenderingContext2D = canvas.getContext('2d');
+    const strategy: NodeDrawingStrategy = useAppSelector(state => state.strategyReducer.strategy);
+    const nodes: NodeType[] = useAppSelector(state => state.nodesReducer.nodes);
 
-      // Set display size (css pixels).
-      const canvasWidth = window.innerWidth - 70;
-      const canvasHeight = window.innerHeight - 50;
-      canvas.style.width = `${canvasWidth}px`;
-      canvas.style.height = `${canvasHeight}px`;
+    const dispatch = useAppDispatch();
 
-      // Set actual size in memory (scaled to account for extra pixel density).
-      const scale = window.devicePixelRatio;
-      canvas.width = Math.floor(canvasWidth * scale);
-      canvas.height = Math.floor(canvasHeight * scale);
+    const drawNodeEventListener = (strategy: NodeDrawingStrategy) => {
+        return (event : PointerEvent) => {
+            const canvas : any = canvasRef.current;
+            const node: NodeType = NodeUtils.fromClickEvent(event, canvas);
 
-      // Normalize coordinate system to use CSS pixels.
-      context.scale(scale, scale);
-
-      // START DRAWINGS
-      canvasDrawer.draw(canvas);
-
-      // END DRAWINGS
-      context.scale(1 / scale, 1 / scale);
-    }
-
-    const drawNode = (event : PointerEvent) => {
-      const canvas : any = canvasRef.current;
-
-      const node = Node.fromClickEvent(event, canvas);
-      console.log(node);
-      nodeDrawer.drawNode(canvas, node);
+            if (NodeDrawingStrategy.Add == strategy) {
+                dispatch(addNode({ x: node.x, y: node.y }));
+            }
+    
+            if (NodeDrawingStrategy.Remove == strategy) {
+                dispatch(removeNode({ x: node.x, y: node.y }));
+            }
+    
+            if (NodeDrawingStrategy.Edit == strategy) {
+                dispatch(editNode({ x: node.x, y: node.y }));
+            }
+        }
     }
 
     useLayoutEffect(() => {
-      drawCanvas();
+        initCanvas(canvasRef, canvasDrawer);
 
-      window.addEventListener('resize', drawCanvas);
-      
-      const canvas : any = canvasRef.current
-      canvas.addEventListener('click', drawNode);
+        const canvas : any = canvasRef.current;
+        nodeDrawer.drawCanvasNodes(canvas, nodes);
 
-      return () => {
-        window.removeEventListener('resize', drawCanvas);
-        canvas.removeEventListener('click', drawNode);
-      }
-    }, [])
-  
+        const canvasResizeEvent = () => {
+            initCanvas(canvasRef, canvasDrawer);
+            const canvas : any = canvasRef.current;
+            nodeDrawer.drawCanvasNodes(canvas, nodes);
+        };
+        
+        window.addEventListener('resize', canvasResizeEvent);
+
+        return () => {
+            window.removeEventListener('resize', canvasResizeEvent);
+        }
+    }, [nodes]);
+
     useEffect(() => {
-      console.log('strategy has changed to: ' + NodeDrawingStrategy[strategy]);
-      
+        const drawNodeCallback = drawNodeEventListener(strategy);
+
+        const canvas : any = canvasRef.current
+        canvas.addEventListener('click', drawNodeCallback);
+
+        return () => {
+            canvas.removeEventListener('click', drawNodeCallback);
+        }
     }, [strategy]);
 
     return (
