@@ -1,6 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import bodyParser from 'body-parser';
-import initializer  from './src/routes/initializer'
+import initializer  from './routes/initializer'
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 
 app.use('/graph', initializer)
 app.get('/', (req: Request, res: Response) => {
-    res.send('Hello, World!')
+    res.send('Hello from graph-solver!')
 })
 
 app.listen(port, () => {
