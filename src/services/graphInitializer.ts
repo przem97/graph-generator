@@ -6,10 +6,30 @@ import IGraphManager from '../utils/graphManager'
 import IGraphInitializer from './interface/graphInitializer.interface'
 
 class GraphInitializer implements IGraphInitializer {
-    initializeGraph(totalVertices: number, totalEdges: number, totalComponents: number): Array<Component> { 
-        let components = this.initializeComponents(totalComponents)
-        components = this.initializeVertices(components, totalVertices)
-        return this.initializeEdges(components, totalEdges)
+    readonly totalVertices: number;
+    readonly totalEdges: number;
+    readonly totalComponents: number;
+    readonly edgeWeightLowerBound: number;
+    readonly edgeWeightUpperBound: number;
+
+    constructor(
+        totalVertices: number,
+        totalEdges: number,
+        totalComponents: number,
+        edgeWeightLowerBound: number,
+        edgeWeightUpperBound: number
+    ) {
+        this.totalVertices = totalVertices;
+        this.totalEdges = totalEdges;
+        this.totalComponents = totalComponents;
+        this.edgeWeightLowerBound = edgeWeightLowerBound;
+        this.edgeWeightUpperBound = edgeWeightUpperBound;
+    }
+
+    initializeGraph(): Array<Component> { 
+        let components = this.initializeComponents(this.totalComponents)
+        components = this.initializeVertices(components, this.totalVertices)
+        return this.initializeEdges(components, this.totalEdges)
     }
 
     initializeComponents(totalComponents: number): Array<Component> {
@@ -91,7 +111,8 @@ class GraphInitializer implements IGraphInitializer {
         for (let i = 0; i < components.length; i += 1) {
             let component = components[i];
             for (let j = 0; j < component.edges.length; j += 1) {
-                component.edges[j].weight = _.round(_.random(0, 10, true), 2);
+                let randomWeight = _.random(this.edgeWeightLowerBound, this.edgeWeightUpperBound, true);
+                component.edges[j].weight = _.round(randomWeight, 2);
             }
         }
 

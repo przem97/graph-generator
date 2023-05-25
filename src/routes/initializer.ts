@@ -9,18 +9,27 @@ const router: Router = express.Router()
 
 router.get('/initialize', (req: Request, res: Response) => {
     res.setHeader('Content-Type', 'application/json');
-    
-    let graphInitializer: IGraphInitializer = new GraphInitializer();
 
     let totalVertices = req.body.totalVertices ? req.body.totalVertices : 0;
     let totalEdges = req.body.totalEdges ? req.body.totalEdges : 0;
     let totalComponents = req.body.totalComponents ? req.body.totalComponents : 0;
+
+    let edgeWeightLowerBound = req.body.edgeWeightLowerBound ? req.body.edgeWeightLowerBound : 0;
+    let edgeWeightUpperBound = req.body.edgeWeightUpperBound ? req.body.edgeWeightUpperBound : 10;
 
     let xAxisLowerBound = req.body.xAxisLowerBound ? req.body.xAxisLowerBound : -100;
     let xAxisUpperBound = req.body.xAxisUpperBound ? req.body.xAxisUpperBound : 100;
     let yAxisLowerBound = req.body.yAxisLowerBound ? req.body.yAxisLowerBound : -100;
     let yAxisUpperBound = req.body.yAxisUpperBound ? req.body.yAxisUpperBound : 100;
 
+    let graphInitializer: IGraphInitializer = new GraphInitializer(
+        totalVertices,
+        totalEdges,
+        totalComponents,
+        edgeWeightLowerBound,
+        edgeWeightUpperBound
+    );
+    
     let coordinatesInitializer: ICoordinatesInitializer = new CoordinatesInitializer(xAxisLowerBound,
         xAxisUpperBound, yAxisLowerBound, yAxisUpperBound);
 
