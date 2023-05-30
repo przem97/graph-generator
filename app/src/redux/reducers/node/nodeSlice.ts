@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { NodeType } from '../../../model/node';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import * as _ from 'lodash';
-import { RADIUS } from '../../../draw/standard/node.drawer';
+import { RADIUS } from '../../../draw/standard/graph.drawer';
 import { LEADING } from '../../../draw/standard/grid.drawer';
 
 export type NodeStateType = {

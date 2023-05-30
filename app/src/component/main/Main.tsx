@@ -1,17 +1,17 @@
 import React from 'react';
 import Canvas from '../canvas/Canvas';
 import GridDrawer from '../../draw/standard/grid.drawer';
-import NodeDrawer from '../../draw/standard/node.drawer';
-import { IGridDrawer, INodeDrawer } from '../../draw';
+import GraphDrawer from '../../draw/standard/graph.drawer';
+import { IGridDrawer, IGraphDrawer } from '../../draw';
 import { styled } from 'styled-components';
 
 export default function Main() {
     const drawer: IGridDrawer = new GridDrawer();
-    const nodeDrawer: INodeDrawer = new NodeDrawer();
+    const graphDrawer: IGraphDrawer = new GraphDrawer();
 
     return (
         <MainContainer>
-            <Canvas canvasDrawer={drawer} nodeDrawer={nodeDrawer} />
+            <Canvas canvasDrawer={drawer} graphDrawer={graphDrawer} />
         </MainContainer>
     )
 }

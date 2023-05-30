@@ -1,11 +1,11 @@
-import { INodeDrawer } from "./interface/node.drawer.interface";
+import { IGraphDrawer } from "./interface/graph.drawer.interface";
 import Node, { NodeType } from '../../model/node';
 import { getCanvasCenter } from '../../utils/canvasUtils';
 import { NodeUtils } from "../../model/util/nodeUtils";
 
 export const RADIUS: number = 30;
 
-export default class NodeDrawer implements INodeDrawer {
+export default class GraphDrawer implements IGraphDrawer {
     drawNode(canvas: HTMLCanvasElement,
              node: NodeType) {
 
