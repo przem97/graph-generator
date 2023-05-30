@@ -1,9 +1,12 @@
 import React from 'react';
 import { styled } from 'styled-components';
+import { CustomApplicationButton } from '../common/Button';
 
 export const DEFAULT_HEADER_HEIGHT = 50;
 
 export default function Header() {
+    const generateButtonProps = { width: '100px', height: '40px' };
+
     return (
         <HeaderContainer headerHeight={DEFAULT_HEADER_HEIGHT}>
             <LeftSectionContainer>
@@ -11,6 +14,11 @@ export default function Header() {
                     <p>Graph Solver Application</p>
                 </AppTitleContainer>
             </LeftSectionContainer>
+            <MiddleSectionContainer>
+                <CustomApplicationButton {...generateButtonProps}>
+                    <p>Generate</p>
+                </CustomApplicationButton>
+            </MiddleSectionContainer>
         </HeaderContainer>
     )
 }
@@ -28,10 +36,16 @@ const HeaderContainer = styled.header<HeaderContainerProps>`
     top: 0;
     left: 0;
     right: 0;
-    justify-content: space-between;
+    justify-content: flex-start;
+    column-gap: 50px;
 `
 
 const LeftSectionContainer = styled.div`
+    display: flex;
+    align-items: center;
+`
+
+const MiddleSectionContainer = styled.div`
     display: flex;
     align-items: center;
 `

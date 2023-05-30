@@ -4,6 +4,7 @@ import { styled } from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { setAddStrategy, setRemoveStrategy, setEditStrategy } from '../../redux/reducers/strategy/draw/strategySlice';
 import { DEFAULT_HEADER_HEIGHT } from '../header/Header';
+import { CustomApplicationButton } from '../common/Button';
 
 export const DEFAULT_SIDEBAR_WIDTH = 70;
 
@@ -14,22 +15,23 @@ export default function Sidebar() {
     const removeAction = () => dispatch(setRemoveStrategy());
     const editAction = () => dispatch(setEditStrategy());
 
+    const sidebarButtonProps = { width: '80%', height: '90%' }
     return (
         <SidebarContainer sidebarWidth={DEFAULT_SIDEBAR_WIDTH} top={DEFAULT_HEADER_HEIGHT}>
             <GraphActionContainer>
-                <GraphActionButtonContainer id="add-button" onClick={addAction}>
+                <CustomApplicationButton id="add-button" onClick={addAction} {...sidebarButtonProps}>
                     <p>Add</p>
-                </GraphActionButtonContainer>
+                </CustomApplicationButton>
             </GraphActionContainer>
             <GraphActionContainer>
-                <GraphActionButtonContainer id="remove-button" onClick={removeAction}>
+                <CustomApplicationButton id="remove-button" onClick={removeAction} {...sidebarButtonProps}>
                     <p>Remove</p>
-                </GraphActionButtonContainer>
+                </CustomApplicationButton>
             </GraphActionContainer>
             <GraphActionContainer>
-                <GraphActionButtonContainer id="edit-button" onClick={editAction}>
+                <CustomApplicationButton id="edit-button" onClick={editAction} {...sidebarButtonProps}>
                     <p>Edit</p>
-                </GraphActionButtonContainer>
+                </CustomApplicationButton>
             </GraphActionContainer>
         </SidebarContainer>
     )
@@ -61,18 +63,4 @@ const GraphActionContainer = styled.div`
     height: 60px;
     margin: 0;
     margin-top: 10px;
-`
-
-const GraphActionButtonContainer = styled.button`
-    height: 90%;
-    width: 80%;
-    border-radius: 2px;
-    border: solid;
-    border-width: 1px;
-    background-color: rgb(255, 219, 175);
-    font-family: Roboto, Arial;
-    font-size: 10px;
-    transition: background-color 0.15s, 
-                font-size 0.15s,
-                box-shadow 0.15s;
 `
