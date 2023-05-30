@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { NodeType } from '../../../model/node';
+import Node, { NodeType } from '../../../model/node';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import * as _ from 'lodash';
 import { RADIUS } from '../../../draw/standard/graph.drawer';
@@ -23,7 +23,7 @@ const nodesSlice = createSlice({
     initialState,
     reducers: {
         addNode(state, action: PayloadAction<AddNodePayloadActionType>): NodeStateType {
-            let newArray: NodeType[] = _.concat(state.nodes, [{ x : action.payload.x, y: action.payload.y }]);
+            let newArray: NodeType[] = _.concat(state.nodes, [ Node.create(action.payload.x, action.payload.y) ]);
             return { ...state, nodes: newArray }
         },
         addNodes(state, action: PayloadAction<AddNodePayloadActionType[]>): NodeStateType {
@@ -37,14 +37,14 @@ const nodesSlice = createSlice({
                 return Math.pow((current.x - target.x), 2) + Math.pow((current.y - target.y), 2) <= Math.pow(radius, 2);
             };
 
-            let targetNode: NodeType = { x : action.payload.x, y: action.payload.y };
+            let targetNode: NodeType = Node.create(action.payload.x, action.payload.y)
             let resultNodes: NodeType[] = [];
             let deleted = false; // indicates the node has been deleted just to not delete overlapping nodes
             
             for (let i = (state.nodes.length - 1); i >= 0; i--) {
                 let currentNode = state.nodes[i];
                 if (!intersect(currentNode, targetNode) || deleted) {
-                    resultNodes.push({ x: currentNode.x, y: currentNode.y })
+                    resultNodes.push(Node.create(currentNode.x, currentNode.y));
                 } else {
                     deleted = true;
                 }

@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useLayoutEffect } from 'react';
 import { IGridDrawer, IGraphDrawer } from '../../draw';
 import { NodeType } from '../../model/node';
+import { ComponentType } from '../../model/component';
 import { NodeDrawingStrategy } from '../../draw/strategy/node.draw.strategy';
 import { addNode, removeNode, editNode } from '../../redux/reducers'
 import { NodeUtils } from '../../model/util/nodeUtils';
@@ -16,7 +17,7 @@ export default function Canvas({ canvasDrawer, graphDrawer } : CanvasProps) {
     const canvasRef = useRef(null);
 
     const strategy: NodeDrawingStrategy = useAppSelector(state => state.strategyReducer.strategy);
-    const nodes: NodeType[] = useAppSelector(state => state.nodesReducer.nodes);
+    const components: ComponentType[] = useAppSelector(state => state.componentsReducer.components);
 
     const dispatch = useAppDispatch();
 
@@ -43,12 +44,12 @@ export default function Canvas({ canvasDrawer, graphDrawer } : CanvasProps) {
         initCanvas(canvasRef, canvasDrawer);
 
         const canvas : any = canvasRef.current;
-        graphDrawer.drawCanvasNodes(canvas, nodes);
+        graphDrawer.drawComponents(canvas, components);
 
         const canvasResizeEvent = () => {
             initCanvas(canvasRef, canvasDrawer);
             const canvas : any = canvasRef.current;
-            graphDrawer.drawCanvasNodes(canvas, nodes);
+            graphDrawer.drawComponents(canvas, components);
         };
         
         window.addEventListener('resize', canvasResizeEvent);
@@ -56,7 +57,7 @@ export default function Canvas({ canvasDrawer, graphDrawer } : CanvasProps) {
         return () => {
             window.removeEventListener('resize', canvasResizeEvent);
         }
-    }, [nodes]);
+    }, [components]);
 
     useEffect(() => {
         const drawNodeCallback = drawNodeEventListener(strategy);
