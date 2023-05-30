@@ -6,4 +6,8 @@ export const ApplicationGlobalStyle = createGlobalStyle`
         padding-top: 50px;
         padding-left: 70px;
     }
+
+    * {
+        font-family: Roboto, Arial;
+    }
 `

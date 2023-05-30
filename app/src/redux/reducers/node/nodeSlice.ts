@@ -23,7 +23,11 @@ const nodesSlice = createSlice({
     initialState,
     reducers: {
         addNode(state, action: PayloadAction<AddNodePayloadActionType>): NodeStateType {
-            let newArray = _.concat(state.nodes, [{ x : action.payload.x, y: action.payload.y }]);
+            let newArray: NodeType[] = _.concat(state.nodes, [{ x : action.payload.x, y: action.payload.y }]);
+            return { ...state, nodes: newArray }
+        },
+        addNodes(state, action: PayloadAction<AddNodePayloadActionType[]>): NodeStateType {
+            let newArray: NodeType[] = action.payload.map(node => Object.create({ x : node.x, y: node.y }));
             return { ...state, nodes: newArray }
         },
         removeNode(state, action: PayloadAction<AddNodePayloadActionType>): NodeStateType { 
@@ -33,8 +37,8 @@ const nodesSlice = createSlice({
                 return Math.pow((current.x - target.x), 2) + Math.pow((current.y - target.y), 2) <= Math.pow(radius, 2);
             };
 
-            let targetNode = { x : action.payload.x, y: action.payload.y };
-            let resultNodes = [];
+            let targetNode: NodeType = { x : action.payload.x, y: action.payload.y };
+            let resultNodes: NodeType[] = [];
             let deleted = false; // indicates the node has been deleted just to not delete overlapping nodes
             
             for (let i = (state.nodes.length - 1); i >= 0; i--) {
@@ -55,5 +59,5 @@ const nodesSlice = createSlice({
     }
 });
 
-export const { addNode, removeNode, editNode } = nodesSlice.actions;
+export const { addNode, addNodes, removeNode, editNode } = nodesSlice.actions;
 export default nodesSlice.reducer;

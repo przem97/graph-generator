@@ -11,26 +11,26 @@ export const DEFAULT_SIDEBAR_WIDTH = 70;
 export default function Sidebar() {
     const dispatch = useDispatch();
 
-    const addAction = () => dispatch(setAddStrategy());
+    const addAction = () => dispatch(setAddStrategy())
     const removeAction = () => dispatch(setRemoveStrategy());
     const editAction = () => dispatch(setEditStrategy());
 
     const sidebarButtonProps = { width: '80%', height: '90%' }
     return (
-        <SidebarContainer sidebarWidth={DEFAULT_SIDEBAR_WIDTH} top={DEFAULT_HEADER_HEIGHT}>
+        <SidebarContainer sidebarwidth={DEFAULT_SIDEBAR_WIDTH} top={DEFAULT_HEADER_HEIGHT}>
             <GraphActionContainer>
                 <CustomApplicationButton id="add-button" onClick={addAction} {...sidebarButtonProps}>
-                    <p>Add</p>
+                    Add
                 </CustomApplicationButton>
             </GraphActionContainer>
             <GraphActionContainer>
                 <CustomApplicationButton id="remove-button" onClick={removeAction} {...sidebarButtonProps}>
-                    <p>Remove</p>
+                    Remove
                 </CustomApplicationButton>
             </GraphActionContainer>
             <GraphActionContainer>
                 <CustomApplicationButton id="edit-button" onClick={editAction} {...sidebarButtonProps}>
-                    <p>Edit</p>
+                    Edit
                 </CustomApplicationButton>
             </GraphActionContainer>
         </SidebarContainer>
@@ -38,7 +38,7 @@ export default function Sidebar() {
 }
 
 type SidebarContainerProps = {
-    sidebarWidth: number;
+    sidebarwidth: number;
     top: number;
 }
   
@@ -52,7 +52,7 @@ const SidebarContainer = styled.nav<SidebarContainerProps>`
     left: 0;
     top: ${props => `${props.top}px` || '50px'};
     bottom: 0;
-    width: ${props => `${props.sidebarWidth}px` || `${DEFAULT_SIDEBAR_WIDTH}px`};
+    width: ${props => `${props.sidebarwidth}px` || `${DEFAULT_SIDEBAR_WIDTH}px`};
 `
 
 const GraphActionContainer = styled.div`

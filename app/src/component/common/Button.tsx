@@ -5,15 +5,16 @@ import { styled } from 'styled-components';
 type GraphActionButtonContainerProps = {
     height: string;
     width: string;
+    onClick: Function;
 };
 
 type CustomApplicationButtonType = HTMLProps<HTMLButtonElement> & GraphActionButtonContainerProps;
 
 export const CustomApplicationButton: FC<CustomApplicationButtonType> = (props) => {
-    const { children, height, width} = props;
+    const { children, height, width, onClick } = props;
     const buttonProperties = { width, height };
     return (
-        <GraphActionButtonContainer {...buttonProperties}>
+        <GraphActionButtonContainer {...buttonProperties} onClick={onClick}>
             { children }
         </GraphActionButtonContainer>
     );
