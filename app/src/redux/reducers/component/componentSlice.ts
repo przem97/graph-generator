@@ -6,6 +6,7 @@ import { RADIUS } from '../../../draw/standard/graph.drawer';
 import { LEADING } from '../../../draw/standard/grid.drawer';
 import Component, { ComponentType } from '../../../model/component';
 import Edge, { EdgeType } from '../../../model/edge';
+import { ComponentUtils } from '../../../model/util/componentUtil';
 
 export type ComponentStateType = {
     components: ComponentType[]
@@ -25,8 +26,9 @@ const componentSlice = createSlice({
     reducers: {
         addNode(state, action: PayloadAction<NodeType>): ComponentStateType {
             // create new component
+            let ordinal = ComponentUtils.getNextNodeOrdinal(state.components);
             const cloned: ComponentType[] = JSON.parse(JSON.stringify(state.components));
-            cloned.push(Component.create([ Node.create(action.payload.x, action.payload.y) ], []))
+            cloned.push(Component.create([ Node.create(action.payload.x, action.payload.y, ordinal) ], []))
             return { ...state, components: cloned };
         },
         removeNode(state, action: PayloadAction<NodeType>): ComponentStateType { 
