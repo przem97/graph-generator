@@ -58,6 +58,7 @@ export default function Header() {
                 newComponents.push(Component.create(nodes, edges));
             }
 
+            // response.data.pipe(fs.createWriteStream('ada_lovelace.jpg'))
             dispatch(saveComponents({components: newComponents}));
           }).catch((error) => {
             console.log('An error occurred during graph generation', error);

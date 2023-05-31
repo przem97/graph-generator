@@ -1,9 +1,9 @@
 import React, { useRef, useEffect, useLayoutEffect } from 'react';
 import { IGridDrawer, IGraphDrawer } from '../../draw';
-import { NodeType } from '../../model/node';
+import Node, { NodeType } from '../../model/node';
 import { ComponentType } from '../../model/component';
 import { NodeDrawingStrategy } from '../../draw/strategy/node.draw.strategy';
-import { addNode, removeNode, editNode } from '../../redux/reducers'
+import { addNode, removeNode } from '../../redux/reducers'
 import { NodeUtils } from '../../model/util/nodeUtils';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { initCanvas } from '../../draw/standard/canvas.drawer';
@@ -27,15 +27,15 @@ export default function Canvas({ canvasDrawer, graphDrawer } : CanvasProps) {
             const node: NodeType = NodeUtils.fromClickEvent(event, canvas);
 
             if (NodeDrawingStrategy.Add == strategy) {
-                dispatch(addNode({ x: node.x, y: node.y }));
+                dispatch(addNode(Node.create(node.x, node.y, 0)));
             }
     
             if (NodeDrawingStrategy.Remove == strategy) {
-                dispatch(removeNode({ x: node.x, y: node.y }));
+                dispatch(removeNode(Node.create(node.x, node.y)));
             }
     
             if (NodeDrawingStrategy.Edit == strategy) {
-                dispatch(editNode({ x: node.x, y: node.y }));
+                // TODO
             }
         }
     }
