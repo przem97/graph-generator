@@ -3,8 +3,9 @@ import { IGridDrawer, IGraphDrawer } from '../../draw';
 import Node, { NodeType } from '../../model/node';
 import { ComponentType } from '../../model/component';
 import { NodeDrawingStrategy } from '../../draw/strategy/node.draw.strategy';
-import { addNode, removeNode } from '../../redux/reducers'
+import { addNode, removeNode, connect } from '../../redux/reducers'
 import { NodeUtils } from '../../model/util/nodeUtils';
+import { ComponentUtils } from '../../model/util/componentUtils';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { initCanvas } from '../../draw/standard/canvas.drawer';
 
@@ -21,7 +22,7 @@ export default function Canvas({ canvasDrawer, graphDrawer } : CanvasProps) {
 
     const dispatch = useAppDispatch();
 
-    const drawNodeEventListener = (strategy: NodeDrawingStrategy) => {
+    const canvasClickEventListener = (strategy: NodeDrawingStrategy) => {
         return (event : PointerEvent) => {
             const canvas : any = canvasRef.current;
             const node: NodeType = NodeUtils.fromClickEvent(event, canvas);
@@ -36,6 +37,13 @@ export default function Canvas({ canvasDrawer, graphDrawer } : CanvasProps) {
     
             if (NodeDrawingStrategy.Edit == strategy) {
                 // TODO
+            }
+    
+            if (NodeDrawingStrategy.Connect == strategy) {
+                const ordinal = ComponentUtils.findOrdinal(node, components);
+                if (ordinal != -1) {
+                    dispatch(connect(ordinal));
+                }
             }
         }
     }
@@ -60,13 +68,13 @@ export default function Canvas({ canvasDrawer, graphDrawer } : CanvasProps) {
     }, [components]);
 
     useEffect(() => {
-        const drawNodeCallback = drawNodeEventListener(strategy);
+        const callback = canvasClickEventListener(strategy);
 
         const canvas : any = canvasRef.current
-        canvas.addEventListener('click', drawNodeCallback);
+        canvas.addEventListener('click', callback);
 
         return () => {
-            canvas.removeEventListener('click', drawNodeCallback);
+            canvas.removeEventListener('click', callback);
         }
     }, [strategy]);
 

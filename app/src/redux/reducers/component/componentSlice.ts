@@ -2,18 +2,19 @@ import { createSlice } from '@reduxjs/toolkit';
 import Node, { NodeType } from '../../../model/node';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import * as _ from 'lodash';
-import { RADIUS } from '../../../draw/standard/graph.drawer';
-import { LEADING } from '../../../draw/standard/grid.drawer';
 import Component, { ComponentType } from '../../../model/component';
 import Edge, { EdgeType } from '../../../model/edge';
-import { ComponentUtils } from '../../../model/util/componentUtil';
+import { ComponentUtils } from '../../../model/util/componentUtils';
+import { NodeUtils } from '../../../model/util/nodeUtils';
 
 export type ComponentStateType = {
     components: ComponentType[]
+    connectAccumulator: number[];
 }
 
 const initialState = {
-    components: []
+    components: [],
+    connectAccumulator: []
 } as ComponentStateType
 
 type SaveComponentsPayloadActionType = {
@@ -31,13 +32,7 @@ const componentSlice = createSlice({
             cloned.push(Component.create([ Node.create(action.payload.x, action.payload.y, ordinal) ], []))
             return { ...state, components: cloned };
         },
-        removeNode(state, action: PayloadAction<NodeType>): ComponentStateType { 
-            const toRealRadius = (radius: number, leading: number) => radius / (window.devicePixelRatio * 2 * leading);
-            const intersect = (current: NodeType, target: NodeType) => {
-                const radius = toRealRadius(RADIUS, LEADING);
-                return Math.pow((current.x - target.x), 2) + Math.pow((current.y - target.y), 2) <= Math.pow(radius, 2);
-            };
-
+        removeNode(state, action: PayloadAction<NodeType>): ComponentStateType {
             let targetClickNode: NodeType = Node.create(action.payload.x, action.payload.y)
             let deleted = false; // indicates the node has been deleted just to not delete overlapping nodes
             
@@ -52,7 +47,7 @@ const componentSlice = createSlice({
                 for (let j = 0; j < component.nodes.length; j++) {
                     const currentNode = component.nodes[j];
 
-                    if (intersect(currentNode, targetClickNode) && !deleted) {
+                    if (NodeUtils.intersect(currentNode, targetClickNode) && !deleted) {
                         deleted = true;
                         nodeToRemove = currentNode;
                     } else {
@@ -82,9 +77,61 @@ const componentSlice = createSlice({
         },
         saveComponents(state, action: PayloadAction<SaveComponentsPayloadActionType>): ComponentStateType {
             return { ...state, components: action.payload.components }
+        },
+        connect(state, action: PayloadAction<number>): ComponentStateType {
+            let newConnectAccumulator: number[] = [];
+            
+            if (state.connectAccumulator.length < 1) {
+                newConnectAccumulator.push(action.payload);
+            } else if (newConnectAccumulator[0] == action.payload) {
+                return { ...state }
+            } else {
+                // merge components
+                const resultComponents: ComponentType[] = [];
+                const componentsToMerge: ComponentType[] = [];
+
+                let nodesWithinTheSameComponent = false;
+
+                for (let i = 0; i < state.components.length; i++) {
+                    const component = state.components[i];
+
+                    const isFirstPresent = !!(_.find(component.nodes, (node: NodeType) => node.ordinal === state.connectAccumulator[0]));
+                    const isSecondPresent = !!(_.find(component.nodes, (node: NodeType) => node.ordinal === action.payload));
+                    if (isFirstPresent && isSecondPresent && !nodesWithinTheSameComponent) {
+                        componentsToMerge.push(component);
+                        nodesWithinTheSameComponent = true;
+                    } else if (isFirstPresent || isSecondPresent) {
+                        componentsToMerge.push(component);
+                    } else {
+                        resultComponents.push(_.cloneDeep(component));
+                    }
+                }
+                
+                if (componentsToMerge.length >= 2) {
+                    // nodes found in the different components
+                    const merged: ComponentType = ComponentUtils.mergeComponents(componentsToMerge[0], componentsToMerge[1]);
+                    const connectEdge: EdgeType = Edge.create(state.connectAccumulator[0], action.payload, 0);
+                    
+                    merged.edges.push(connectEdge);
+                    resultComponents.push(merged);
+
+                    return { ...state, components: resultComponents, connectAccumulator: newConnectAccumulator }
+                } else if (componentsToMerge.length == 1) {
+                    // nodes found within the same component
+                    const connectEdge: EdgeType = Edge.create(state.connectAccumulator[0], action.payload, 0);
+                    
+                    const newComponent = _.cloneDeep(componentsToMerge[0]);
+                    newComponent.edges.push(connectEdge);
+
+                    resultComponents.push(newComponent);
+                    return { ...state, components: resultComponents, connectAccumulator: newConnectAccumulator }
+                }
+            }
+
+            return { ...state, connectAccumulator: newConnectAccumulator }
         }
     }
 });
 
-export const { addNode, removeNode, saveComponents } = componentSlice.actions;
+export const { addNode, removeNode, saveComponents, connect } = componentSlice.actions;
 export default componentSlice.reducer;

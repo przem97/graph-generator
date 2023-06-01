@@ -5,7 +5,7 @@ export type EdgeType = {
 }
 
 export default class Edge {
-    static create(startVertex: number, endVertex: number, weight: number): EdgeType {
+    static create(startVertex: number, endVertex: number, weight: number = 0): EdgeType {
         return {
             startVertex: startVertex,
             endVertex: endVertex,

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { styled } from 'styled-components';
 import { useDispatch } from 'react-redux';
-import { setAddStrategy, setRemoveStrategy, setEditStrategy } from '../../redux/reducers/strategy/draw/strategySlice';
+import { setAddStrategy, setRemoveStrategy, setEditStrategy, setConnectStrategy } from '../../redux/reducers';
 import { DEFAULT_HEADER_HEIGHT } from '../header/Header';
 import { CustomApplicationButton } from '../common/Button';
 
@@ -14,6 +14,7 @@ export default function Sidebar() {
     const addAction = () => dispatch(setAddStrategy())
     const removeAction = () => dispatch(setRemoveStrategy());
     const editAction = () => dispatch(setEditStrategy());
+    const connectAction = () => dispatch(setConnectStrategy());
 
     const sidebarButtonProps = { width: '80%', height: '90%' }
     return (
@@ -31,6 +32,11 @@ export default function Sidebar() {
             <GraphActionContainer>
                 <CustomApplicationButton id="edit-button" onClick={editAction} {...sidebarButtonProps}>
                     Edit
+                </CustomApplicationButton>
+            </GraphActionContainer>
+            <GraphActionContainer>
+                <CustomApplicationButton id="connect-button" onClick={connectAction} {...sidebarButtonProps}>
+                    Connect
                 </CustomApplicationButton>
             </GraphActionContainer>
         </SidebarContainer>

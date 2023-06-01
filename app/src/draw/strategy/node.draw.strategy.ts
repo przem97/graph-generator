@@ -1,7 +1,8 @@
 export enum NodeDrawingStrategy {
     Add,
     Remove,
-    Edit
+    Edit,
+    Connect
 }
 
 export const DEFAULT_STRATEGY: NodeDrawingStrategy = NodeDrawingStrategy.Add;

@@ -21,9 +21,12 @@ const strategySlice = createSlice({
         },
         setEditStrategy(state): StrategyStateType {
             return { ...state, strategy: NodeDrawingStrategy.Edit };
+        },
+        setConnectStrategy(state): StrategyStateType {
+            return { ...state, strategy: NodeDrawingStrategy.Connect };
         }
     }
 });
 
-export const { setAddStrategy, setRemoveStrategy, setEditStrategy } = strategySlice.actions;
+export const { setAddStrategy, setRemoveStrategy, setEditStrategy, setConnectStrategy } = strategySlice.actions;
 export default strategySlice.reducer;
