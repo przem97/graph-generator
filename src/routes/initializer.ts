@@ -7,7 +7,7 @@ import ICoordinatesInitializer from '../services/interface/coordinatesInitialize
 
 const router: Router = express.Router()
 
-router.get('/initialize', (req: Request, res: Response) => {
+router.post('/initialize', (req: Request, res: Response) => {
     res.setHeader('Content-Type', 'application/json');
 
     let totalVertices = req.body.totalVertices ? req.body.totalVertices : 0;
