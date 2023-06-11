@@ -1,9 +1,9 @@
 import express, { Router, Request, Response } from 'express';
 import Component from '../models/component';
-import GraphInitializer from '../services/graphInitializer';
-import CoordinatesInitializer from '../services/coordinatesInitializer';
-import IGraphInitializer from '../services/interface/graphInitializer.interface';
-import ICoordinatesInitializer from '../services/interface/coordinatesInitializer.interface';
+import GraphInitializer from '../services/initializer/graph/graphInitializer';
+import CoordinatesInitializer from '../services/initializer/coordinates/coordinatesInitializer';
+import IGraphInitializer from '../services/initializer/graph/interface/graphInitializer.interface';
+import ICoordinatesInitializer from '../services/initializer/coordinates/interface/coordinatesInitializer.interface';
 
 const router: Router = express.Router()
 
@@ -33,7 +33,7 @@ router.post('/initialize', (req: Request, res: Response) => {
     let coordinatesInitializer: ICoordinatesInitializer = new CoordinatesInitializer(xAxisLowerBound,
         xAxisUpperBound, yAxisLowerBound, yAxisUpperBound);
 
-    const components: Array<Component> = graphInitializer.initializeGraph(totalVertices, totalEdges, totalComponents)
+    const components: Array<Component> = graphInitializer.initializeGraph();
 
     coordinatesInitializer.initializeCoordinates(components); 
 

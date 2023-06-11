@@ -1,4 +1,4 @@
-import Edge from "../models/edge";
+import Edge from "../../models/edge";
 
 export default interface IGraphManager {
     isFull(): Boolean;

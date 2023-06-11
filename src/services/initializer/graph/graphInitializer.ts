@@ -1,8 +1,8 @@
 import _ from 'lodash'
-import Component from '../models/component'
-import Vertex from '../models/vertex';
-import GraphManager from '../utils/graphManager'
-import IGraphManager from '../utils/graphManager'
+import Component from '../../../models/component'
+import Vertex from '../../../models/vertex';
+import GraphManager from '../../../utils/graphManager'
+import IGraphManager from '../../../utils/graphManager'
 import IGraphInitializer from './interface/graphInitializer.interface'
 
 class GraphInitializer implements IGraphInitializer {
