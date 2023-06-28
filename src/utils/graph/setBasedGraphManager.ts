@@ -1,15 +1,21 @@
 import _, { Dictionary } from "lodash";
-import Edge from "../models/edge";
-import Vertex from "../models/vertex";
-import IGraphManager from "./interface/graphManager.interface"
+import Edge from "../../models/edge";
+import Vertex from "../../models/vertex";
+import IGraphManager from "./graphManager.interface"
 
 /**
  * Utility class which provides basic operaions on graph like adding/removing edges and tree initialization
  */
-class GraphManager implements IGraphManager {
+class SetBasedGraphManager implements IGraphManager {
     vertices: Array<Vertex>;
     vertexToIndex: Dictionary<number>;
+    /**
+     * enumerates initialized edges
+     */
     numbers: Set<number>;
+    /**
+     * enumerates not initialized edges
+     */
     notInitializedNumbers: Set<number>;
 
     /**
@@ -106,4 +112,4 @@ class GraphManager implements IGraphManager {
     }
 }
 
-export default GraphManager
+export default SetBasedGraphManager;

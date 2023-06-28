@@ -1,6 +1,6 @@
-import ICoordinatesInitializer from "./interface/coordinatesInitializer.interface";
-import Component from "../../../models/component";
 import _ from "lodash";
+import Component from "../../../models/component";
+import ICoordinatesInitializer from "./coordinatesInitializer.interface";
 
 class CoordinatesInitializer implements ICoordinatesInitializer {
     xLowerBound: number;
