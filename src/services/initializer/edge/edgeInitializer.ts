@@ -1,8 +1,8 @@
 import * as _ from "lodash";
 import Component from "../../../models/component";
-import IGraphManager from "../../../utils/graph/graphManager.interface";
+import IComponentManager from "../../../utils/component/componentManager.interface";
 import IEdgeInitializer from "./edgeInitializer.interface";
-import SetBasedGraphManager from "../../../utils/graph/setBasedGraphManager";
+import SetBasedComponentManager from "../../../utils/component/setBasedComponentManager";
 
 export default class EdgeInitializer implements IEdgeInitializer {
     readonly totalEdges: number;
@@ -56,7 +56,7 @@ export default class EdgeInitializer implements IEdgeInitializer {
         
         // initialize edges within each component
         for (let i = 0; i < components.length; i += 1) {
-            let graphManager: IGraphManager = new SetBasedGraphManager(components[i].vertices)
+            let graphManager: IComponentManager = new SetBasedComponentManager(components[i].vertices)
             
             // initialize tree in order to have complete component
             let edgesInitialized = graphManager.initializeTree()

@@ -1,6 +1,6 @@
 import Edge from "../../models/edge";
 
-export default interface IGraphManager {
+export default interface IComponentManager {
     isFull(): Boolean;
     initializeTree(): number;
     addEgde(edge: Edge): void;

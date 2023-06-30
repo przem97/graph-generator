@@ -1,12 +1,12 @@
 import _, { Dictionary } from "lodash";
 import Edge from "../../models/edge";
 import Vertex from "../../models/vertex";
-import IGraphManager from "./graphManager.interface"
+import IComponentManager from "./componentManager.interface"
 
 /**
  * Utility class which provides basic operaions on graph like adding/removing edges and tree initialization
  */
-class SetBasedGraphManager implements IGraphManager {
+class SetBasedComponentManager implements IComponentManager {
     vertices: Array<Vertex>;
     vertexToIndex: Dictionary<number>;
     /**
@@ -112,4 +112,4 @@ class SetBasedGraphManager implements IGraphManager {
     }
 }
 
-export default SetBasedGraphManager;
+export default SetBasedComponentManager;
