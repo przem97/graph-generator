@@ -1,4 +1,4 @@
-import _ from "lodash";
+import _ from "lodash-es";
 import Component from "../../../models/component";
 import ICoordinatesInitializer from "./coordinatesInitializer.interface";
 
