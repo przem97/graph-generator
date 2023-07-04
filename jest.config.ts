@@ -9,7 +9,8 @@ const config: Config = {
                 },
             ],
     },
-    extensionsToTreatAsEsm: ['.ts']
+    extensionsToTreatAsEsm: ['.ts'],
+    testEnvironment: 'node'
 }
 
 export default config;
