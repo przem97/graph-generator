@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import * as _ from "lodash-es";
 import Component from "../../../models/component";
 import IComponentManager from "../../../utils/component/componentManager.interface";
 import IEdgeInitializer from "./edgeInitializer.interface";

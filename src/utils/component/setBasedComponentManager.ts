@@ -1,4 +1,5 @@
-import _, { Dictionary } from "lodash";
+import * as _ from "lodash-es";
+import { Dictionary } from "lodash";
 import Edge from "../../models/edge";
 import Vertex from "../../models/vertex";
 import IComponentManager from "./componentManager.interface"
