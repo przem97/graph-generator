@@ -1,4 +1,5 @@
 import { Dictionary } from "lodash"
+import Vertex from "./vertex";
 
 class Edge {
     startVertex: number;
@@ -14,6 +15,10 @@ class Edge {
 
     toIndex(vertexToIndex: Dictionary<number>): Edge {
         return new Edge(vertexToIndex[this.startVertex], vertexToIndex[this.endVertex], this.weight);
+    }
+
+    static fromVertices(startVertex: Vertex, endVertex: Vertex, weight: number = 0): Edge {
+        return new Edge(startVertex.ordinal, endVertex.ordinal, weight);
     }
 }
 
