@@ -170,7 +170,6 @@ class SetBasedComponentManager implements IComponentManager {
             const newComponent: Component = new Component();
             newComponent.vertices = component1.vertices.concat(component2.vertices);
             newComponent.edges = component1.edges.concat(component2.edges).concat(totalEdges);
-            newComponent.edgesNumber = newComponent.edges.length;
             
             return newComponent;
         }

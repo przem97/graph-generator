@@ -28,12 +28,13 @@ export default class EdgeInitializer implements IEdgeInitializer {
      */
     initializeEdges(components: Component[]): Array<Component> {
         let currentEdges = 0
-        
+        let edgesNumber: number[] = [];
+
         // populate minimum number of edges necessary to create a component
         _.forEach(components, (component) => {
             let minimumEdgesNumber = component.vertices.length - 1
             currentEdges += minimumEdgesNumber
-            component.edgesNumber = minimumEdgesNumber
+            edgesNumber.push(minimumEdgesNumber);
         })
 
         const remainingEdgesNumber = this.totalEdges - currentEdges
@@ -45,11 +46,11 @@ export default class EdgeInitializer implements IEdgeInitializer {
 
             // get random index of not yet fully bucket
             let randomIndex = _.random(availableComponents.length - 1)
-            components[availableComponents[randomIndex]].edgesNumber += 1
+            edgesNumber[availableComponents[randomIndex]] += 1
 
             let verticesNumber = components[availableComponents[randomIndex]].vertices.length
             // if bucket is full then remove it from the list of available buckets
-            if (components[availableComponents[randomIndex]].edgesNumber >= (verticesNumber * (verticesNumber - 1) / 2)) {
+            if (edgesNumber[availableComponents[randomIndex]] >= (verticesNumber * (verticesNumber - 1) / 2)) {
                 availableComponents.splice(randomIndex, 1)
             }
         }
@@ -60,7 +61,7 @@ export default class EdgeInitializer implements IEdgeInitializer {
             
             // initialize tree in order to have complete component
             let edgesInitialized = graphManager.initializeTree()
-            let size = components[i].edgesNumber - edgesInitialized
+            let size = edgesNumber[i] - edgesInitialized
             
             // add the remaining number of edges randomly
             graphManager.addRandomEdgesSize(size)
