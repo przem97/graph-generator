@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import _ from "lodash";
 import { Dictionary } from "lodash";
 import Edge from "../../models/edge";
 import Vertex from "../../models/vertex";
@@ -19,6 +19,7 @@ class SetBasedComponentManager implements IComponentManager {
      * enumerates not initialized edges
      */
     readonly notInitializedNumbers: Set<number>;
+    readonly edgeWeight: Map<number, number>;
 
     /**
      * The graph is represented by a two sets where the inspiration was took from matrix representation of graph edges, namely,
@@ -27,7 +28,7 @@ class SetBasedComponentManager implements IComponentManager {
      * are not required to be consecutive numbers (when sorted) since mapping between vertex and specific index is performed.
      * @param {Array.<number>} vertices - The list of vertices
      */
-    constructor(vertices: Array<Vertex>) {
+    constructor(vertices: Array<Vertex>, edges: Edge[] = []) {
         this.vertices = vertices
         this.vertexToIndex = {}
         
@@ -42,6 +43,12 @@ class SetBasedComponentManager implements IComponentManager {
         } else {
             this.notInitializedNumbers = new Set();
         }
+
+        this.edgeWeight = new Map();
+
+        for (let i = 0; i < edges.length; i++) { 
+            this.addEgde(new Edge(edges[i].startVertex, edges[i].endVertex, edges[i].weight));
+        }
     }
 
     edgeToNumber(edge: Edge): number {
@@ -50,7 +57,10 @@ class SetBasedComponentManager implements IComponentManager {
     }
 
     numberToEdge(number: number): Edge {
-        return new Edge(this.vertices[(number / this.vertices.length) >> 0].ordinal, this.vertices[number % this.vertices.length].ordinal)
+        const startVertex = this.vertices[(number / this.vertices.length) >> 0].ordinal;
+        const endVertex = this.vertices[number % this.vertices.length].ordinal;
+        const weight = this.edgeWeight.get(number);
+        return new Edge(startVertex, endVertex, weight);
     }
 
     isFull(): Boolean {
@@ -69,7 +79,8 @@ class SetBasedComponentManager implements IComponentManager {
     addEgde(edge: Edge): void {
         let edgeNumber: number = this.edgeToNumber(edge)
         if (this.notInitializedNumbers.delete(edgeNumber)) {
-            this.numbers.add(edgeNumber)
+            this.numbers.add(edgeNumber);
+            this.edgeWeight.set(edgeNumber, edge.weight);
         }
     }
 
@@ -82,6 +93,7 @@ class SetBasedComponentManager implements IComponentManager {
         let edgeNumber: number = this.edgeToNumber(edge)
         if (this.numbers.delete(edgeNumber)) {
             this.notInitializedNumbers.add(edgeNumber)
+            this.edgeWeight.delete(edgeNumber);
             return true
         }
         return false
@@ -90,12 +102,14 @@ class SetBasedComponentManager implements IComponentManager {
     addNumber(number: number) {
         if (this.notInitializedNumbers.delete(number)) {
             this.numbers.add(number)
+            this.edgeWeight.set(number, 0);
         }
     }
     
     deleteNumber(number: number) {
         if (this.numbers.delete(number)) {
-            this.notInitializedNumbers.add(number)
+            this.notInitializedNumbers.add(number);
+            this.edgeWeight.delete(number);
         }
     }
 
@@ -160,7 +174,10 @@ class SetBasedComponentManager implements IComponentManager {
         for (let i = 0; i < component1.vertices.length; i++) {
             for (let j = 0; j < component2.vertices.length; j++) {
                 const edge: Edge = Edge.fromVertices(component1.vertices[i], component2.vertices[j]);
-                if (this.numbers.has(this.edgeToNumber(edge))) {
+                if (this.hasEdge(edge)) {
+                    const actualEdgeNumber = this.edgeToNumber(edge);
+                    const edgeWeight = this.edgeWeight.get(actualEdgeNumber);
+                    edge.weight = edgeWeight ? edgeWeight : 0;
                     totalEdges.push(edge);
                 }
             }   

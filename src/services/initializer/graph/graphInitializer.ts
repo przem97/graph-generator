@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import _ from 'lodash';
 import Component from '../../../models/component';
 import IEdgeInitializer from '../edge/edgeInitializer.interface';
 import IGraphInitializer from './graphInitializer.interface';

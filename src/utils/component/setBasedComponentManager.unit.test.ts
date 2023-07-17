@@ -3,10 +3,10 @@ import SetBasedComponentManager from "./setBasedComponentManager";
 import Vertex from "../../models/vertex";
 import Edge from "../../models/edge";
 import Component from "../../models/component";
-import * as _ from "lodash-es";
+import _ from "lodash";
 
 describe('isFull() method tests', () => {
-    it('should return the graph with 4 vertices is full', () => {
+    it('should indicate the graph with 4 vertices is full', () => {
         // given 
         const componentManager: IComponentManager = new SetBasedComponentManager([
             new Vertex(0),
@@ -28,7 +28,7 @@ describe('isFull() method tests', () => {
         expect(componentManager.isFull()).toBeTruthy();
     });
 
-    it('should return the graph with 1 vertex is full', () => {
+    it('should indicate the graph with 1 vertex is full', () => {
         // given 
         const componentManager: IComponentManager = new SetBasedComponentManager([
             new Vertex(0)
@@ -40,7 +40,7 @@ describe('isFull() method tests', () => {
         expect(componentManager.isFull()).toBeTruthy();
     });
 
-    it('should return the graph with no vertices is full', () => {
+    it('should indicate the graph with no vertices is full', () => {
         // given 
         const componentManager: IComponentManager = new SetBasedComponentManager([]);
         
@@ -50,7 +50,7 @@ describe('isFull() method tests', () => {
         expect(componentManager.isFull()).toBeTruthy();
     });
 
-    it('should return the graph with 2 vertices is not full', () => {
+    it('should indicate the graph with 2 vertices is not full', () => {
         // given 
         const componentManager: IComponentManager = new SetBasedComponentManager([
             new Vertex(0),
@@ -63,7 +63,7 @@ describe('isFull() method tests', () => {
         expect(componentManager.isFull()).toBeFalsy();
     });
 
-    it('should return the graph with 3 vertices is not full', () => {
+    it('should indicate the graph with 3 vertices is not full', () => {
         // given 
         const componentManager: IComponentManager = new SetBasedComponentManager([
             new Vertex(0),
@@ -79,7 +79,7 @@ describe('isFull() method tests', () => {
         expect(componentManager.isFull()).toBeFalsy();
     });
 
-    it('should return the graph with 5 vertices is not full', () => {
+    it('should indicate the graph with 5 vertices is not full', () => {
         // given 
         const componentManager: IComponentManager = new SetBasedComponentManager([
             new Vertex(0),
@@ -97,7 +97,7 @@ describe('isFull() method tests', () => {
         expect(componentManager.isFull()).toBeFalsy();
     });
 
-    it('should return the tree graph with 6 vertices is not full', () => {
+    it('should indicate the tree graph with 6 vertices is not full', () => {
         // given 
         const componentManager: IComponentManager = new SetBasedComponentManager([
             new Vertex(0),
@@ -183,13 +183,14 @@ describe('addEgde() method tests', () => {
         const componentManager: IComponentManager = new SetBasedComponentManager(_.range(3).map(n => new Vertex(n)));
         
         // when
-        componentManager.addEgde(new Edge(0, 1));
+        componentManager.addEgde(new Edge(0, 1, 0.789));
         
         // then
         expect(componentManager.getEdges().length).toEqual(1);
         expect(componentManager.getVertices().length).toEqual(3);
         expect(componentManager.getEdges()[0].startVertex).toEqual(0);
         expect(componentManager.getEdges()[0].endVertex).toEqual(1);
+        expect(componentManager.getEdges()[0].weight).toBeCloseTo(0.789);
     });
 
     it('should add 3 edges', () => {
