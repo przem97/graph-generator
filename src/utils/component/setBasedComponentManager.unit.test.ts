@@ -634,4 +634,36 @@ describe("split() method tests", () => {
             expect(component.edges.length).toEqual(1);
         }
     });
+
+    test('component manager should split and preserve edge weights', () => {
+        // given 
+        const componentManager: IComponentManager = new SetBasedComponentManager([
+            new Vertex(0),
+            new Vertex(1),
+            new Vertex(2),
+            new Vertex(3)
+        ]);
+        componentManager.addEgde(new Edge(0, 1, 1.23333));
+        componentManager.addEgde(new Edge(1, 2, -0.22));
+        componentManager.addEgde(new Edge(2, 3, 250.22));
+        
+        // when
+        componentManager.removeEdge(new Edge(1, 2));
+        const components: Component[] = componentManager.split();
+
+        // then
+        expect(components.length).toBe(2);
+        for (const component of components) {
+            expect(component).not.toBeUndefined();
+            expect(component).not.toBeFalsy();
+            expect(component.edges).not.toBeUndefined();
+            expect(component.edges).not.toBeFalsy();
+            expect(component.edges.length).toEqual(1);
+            if (component.edges[0].startVertex === 0 && component.edges[0].endVertex === 1) {
+                expect(component.edges[0].weight).toBeCloseTo(1.23333);
+            } else if (component.edges[0].startVertex === 2 && component.edges[0].endVertex === 3) {
+                expect(component.edges[0].weight).toBeCloseTo(250.22);
+            }
+        }
+    });
 });
