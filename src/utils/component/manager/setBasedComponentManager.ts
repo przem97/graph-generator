@@ -51,6 +51,14 @@ class SetBasedComponentManager implements IComponentManager {
         }
     }
 
+    static ofComponent(component: Component): SetBasedComponentManager {
+        return new SetBasedComponentManager(component.vertices, component.edges);
+    }
+
+    getComponent(): Component {
+        return new Component(this.getEdges(), this.getVertices());
+    }
+
     edgeToNumber(edge: Edge): number {
         let indexedEdge: Edge = edge.toIndex(this.vertexToIndex)
         return this.vertices.length * indexedEdge.startVertex + indexedEdge.endVertex

@@ -2,7 +2,6 @@ import IComponentManager from "./componentManager.interface";
 import SetBasedComponentManager from "./setBasedComponentManager";
 import Vertex from "../../../models/vertex";
 import Edge from "../../../models/edge";
-import Component from "../../../models/component";
 import _ from "lodash";
 
 describe('isFull() method tests', () => {

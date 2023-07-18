@@ -12,6 +12,7 @@ export default interface IComponentManager {
     removeEdge(edge: Edge): Boolean;
     getEdges(): Array<Edge>;
     getVertices(): Array<Vertex>;
+    getComponent(): Component;
     addRandomEdge(): void;
     addRandomEdgesSize(size: number): void;
 }
