@@ -2,12 +2,12 @@ import Edge from "./edge";
 import Vertex from "./vertex";
 
 class Component {
-    edges: Array<Edge>;
-    vertices: Array<Vertex>;
+    readonly edges: Array<Edge>;
+    readonly vertices: Array<Vertex>;
 
-    constructor() {
-        this.edges = [];
-        this.vertices = [];
+    constructor(edges: Edge[] = [], vertices: Vertex[] = []) {
+        this.edges = edges;
+        this.vertices = vertices;
     }
 }
 

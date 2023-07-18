@@ -2,9 +2,9 @@ import { Dictionary } from "lodash"
 import Vertex from "./vertex";
 
 class Edge {
-    startVertex: number;
-    endVertex: number;
-    weight: number;
+    readonly startVertex: number;
+    readonly endVertex: number;
+    readonly weight: number;
 
     constructor(x: number, y: number, weight: number = 0) {
         [x, y] = [x, y].sort((a: number, b: number) => a - b);

@@ -1,7 +1,7 @@
 class Vertex {
-    ordinal: number;
-    x: number;
-    y: number;
+    readonly ordinal: number;
+    readonly x: number;
+    readonly y: number;
 
     constructor(ordinal: number, x: number = 0, y: number = 0) {
         this.ordinal = ordinal;
