@@ -10,7 +10,7 @@ import IComponentManager from "./componentManager.interface"
  */
 class SetBasedComponentManager implements IComponentManager {
     readonly vertices: Array<Vertex>;
-    readonly vertexToIndex: Dictionary<number>;
+    readonly vertexToIndex: Map<number, number>;
     /**
      * enumerates initialized edges
      */
@@ -30,10 +30,10 @@ class SetBasedComponentManager implements IComponentManager {
      */
     constructor(vertices: Array<Vertex>, edges: Edge[] = []) {
         this.vertices = vertices
-        this.vertexToIndex = {}
+        this.vertexToIndex = new Map<number, number>();
         
         for (let i = 0; i < this.vertices.length; i += 1) {
-            this.vertexToIndex[this.vertices[i].ordinal] = i
+            this.vertexToIndex.set(this.vertices[i].ordinal, i);
         }
 
         this.numbers = new Set();
@@ -47,7 +47,7 @@ class SetBasedComponentManager implements IComponentManager {
         this.edgeWeight = new Map();
 
         for (let i = 0; i < edges.length; i++) { 
-            this.addEgde(new Edge(edges[i].startVertex, edges[i].endVertex, edges[i].weight));
+            this.addEdge(new Edge(edges[i].startVertex, edges[i].endVertex, edges[i].weight));
         }
     }
 
@@ -71,13 +71,13 @@ class SetBasedComponentManager implements IComponentManager {
     initializeTree(): number {
         for (let i = 0; i < (this.vertices.length - 1); i += 1) {
             let edge: Edge = new Edge(this.vertices[i].ordinal, this.vertices[i + 1].ordinal)
-            this.addEgde(edge)
+            this.addEdge(edge)
         }
         return this.vertices.length - 1
     }
 
-    addEgde(edge: Edge): void {
-        let edgeNumber: number = this.edgeToNumber(edge)
+    addEdge(edge: Edge): void {
+        let edgeNumber: number = this.edgeToNumber(edge);
         if (this.notInitializedNumbers.delete(edgeNumber)) {
             this.numbers.add(edgeNumber);
             this.edgeWeight.set(edgeNumber, edge.weight);
@@ -97,6 +97,10 @@ class SetBasedComponentManager implements IComponentManager {
     hasEdge(edge: Edge): Boolean {
         let edgeNumber: number = this.edgeToNumber(edge)
         return this.numbers.has(edgeNumber) && !this.notInitializedNumbers.has(edgeNumber)
+    }
+
+    hasVertex(vertex: Vertex): Boolean {
+        return this.vertexToIndex.has(vertex.ordinal);
     }
 
     removeEdge(edge: Edge): Boolean {
@@ -144,65 +148,6 @@ class SetBasedComponentManager implements IComponentManager {
 
     addRandomEdgesSize(size: number): void {
        _.forEach(_.sampleSize(Array.from(this.notInitializedNumbers), size), (x) => this.addNumber(x))
-    }
-
-    split(): Component[] {
-        const components: Component[] = [];
-
-        // create list of components to merge
-        for (let i = 0; i < this.vertices.length; i++) {
-            let component: Component = new Component([], [ { ...this.vertices[i]} ]);
-            components.push(component);
-        }
-
-        // merge all the components
-        let i = 0;
-        let j = i + 1;
-        while (i < components.length) {
-            if (j >= components.length) {
-                i += 1;
-                j = i + 1;
-                continue;
-            }
-            
-            const newComponent: Component | null = this.merge(components[i], components[j]);
-
-            if (newComponent !== null) {
-                components.splice(j, 1);
-                components.splice(i, 1, newComponent);
-            } else {
-                j += 1;
-            }
-        }
-
-        return components;
-    }
-
-    merge(component1: Component, component2: Component): Component | null {
-        let totalEdges: Edge[] = [];
-        for (let i = 0; i < component1.vertices.length; i++) {
-            for (let j = 0; j < component2.vertices.length; j++) {
-                const edge: Edge = Edge.fromVertices(component1.vertices[i], component2.vertices[j]);
-                if (this.hasEdge(edge)) {
-                    const edgeWeight = this.getEdgeWeight(edge);
-                    const newEdge: Edge = Edge.fromVertices(
-                        component1.vertices[i], 
-                        component2.vertices[j], 
-                        edgeWeight ? edgeWeight : 0
-                    );
-                    totalEdges.push(newEdge);
-                }
-            }   
-        }
-
-        if (totalEdges.length !== 0) {
-            const vertices: Vertex[] = component1.vertices.concat(component2.vertices);
-            const edges: Edge[] = component1.edges.concat(component2.edges).concat(totalEdges);
-            
-            return new Component(edges, vertices);
-        }
-
-        return null;
     }
 }
 

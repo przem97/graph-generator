@@ -15,12 +15,12 @@ describe('isFull() method tests', () => {
             new Vertex(3)
         ]);
 
-        componentManager.addEgde(new Edge(0, 1));
-        componentManager.addEgde(new Edge(0, 2));
-        componentManager.addEgde(new Edge(0, 3));
-        componentManager.addEgde(new Edge(1, 2));
-        componentManager.addEgde(new Edge(1, 3));
-        componentManager.addEgde(new Edge(2, 3));
+        componentManager.addEdge(new Edge(0, 1));
+        componentManager.addEdge(new Edge(0, 2));
+        componentManager.addEdge(new Edge(0, 3));
+        componentManager.addEdge(new Edge(1, 2));
+        componentManager.addEdge(new Edge(1, 3));
+        componentManager.addEdge(new Edge(2, 3));
 
         // when
         
@@ -72,8 +72,8 @@ describe('isFull() method tests', () => {
         ]);
         
         // when
-        componentManager.addEgde(new Edge(0, 1));
-        componentManager.addEgde(new Edge(1, 2));
+        componentManager.addEdge(new Edge(0, 1));
+        componentManager.addEdge(new Edge(1, 2));
         
         // then
         expect(componentManager.isFull()).toBeFalsy();
@@ -90,8 +90,8 @@ describe('isFull() method tests', () => {
         ]);
         
         // when
-        componentManager.addEgde(new Edge(0, 1));
-        componentManager.addEgde(new Edge(2, 3));
+        componentManager.addEdge(new Edge(0, 1));
+        componentManager.addEdge(new Edge(2, 3));
         
         // then
         expect(componentManager.isFull()).toBeFalsy();
@@ -177,13 +177,13 @@ describe('initializeTree() method tests', () => {
     });
 });
 
-describe('addEgde() method tests', () => {
+describe('addEdge() method tests', () => {
     it('should add one edge', () => {
         // given 
         const componentManager: IComponentManager = new SetBasedComponentManager(_.range(3).map(n => new Vertex(n)));
         
         // when
-        componentManager.addEgde(new Edge(0, 1, 0.789));
+        componentManager.addEdge(new Edge(0, 1, 0.789));
         
         // then
         expect(componentManager.getEdges().length).toEqual(1);
@@ -198,9 +198,9 @@ describe('addEgde() method tests', () => {
         const componentManager: IComponentManager = new SetBasedComponentManager(_.range(3).map(n => new Vertex(n)));
         
         // when
-        componentManager.addEgde(new Edge(0, 1));
-        componentManager.addEgde(new Edge(0, 2));
-        componentManager.addEgde(new Edge(1, 2));
+        componentManager.addEdge(new Edge(0, 1));
+        componentManager.addEdge(new Edge(0, 2));
+        componentManager.addEdge(new Edge(1, 2));
         
         // then
         expect(componentManager.getEdges().length).toEqual(3);
@@ -222,8 +222,8 @@ describe('hasEdge() method tests', () => {
         const componentManager: IComponentManager = new SetBasedComponentManager(_.range(3).map(n => new Vertex(n)));
         
         // when
-        componentManager.addEgde(new Edge(0, 1));
-        componentManager.addEgde(new Edge(1, 2));
+        componentManager.addEdge(new Edge(0, 1));
+        componentManager.addEdge(new Edge(1, 2));
         
         // then
         expect(componentManager.hasEdge(new Edge(0, 1))).toBeTruthy();
@@ -250,8 +250,8 @@ describe('hasEdge() method tests', () => {
         const componentManager: IComponentManager = new SetBasedComponentManager(_.range(3).map(n => new Vertex(n)));
         
         // when
-        componentManager.addEgde(new Edge(2, 3)); // add dummy edge
-        componentManager.addEgde(new Edge(4, 2)); // add dummy edge
+        componentManager.addEdge(new Edge(2, 3)); // add dummy edge
+        componentManager.addEdge(new Edge(4, 2)); // add dummy edge
         
         // then
         for (let i = 0; i < 50; i++) {
@@ -268,7 +268,7 @@ describe('hasEdge() method tests', () => {
         // when
         for (let i = 0; i < 6; i++) {
             for (let j = 0; j < 6; j++) {
-                componentManager.addEgde(new Edge(i, j));
+                componentManager.addEdge(new Edge(i, j));
             }
         }
         
@@ -291,7 +291,7 @@ describe('hasEdge() method tests', () => {
         // when
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
-                componentManager.addEgde(new Edge(i, j));
+                componentManager.addEdge(new Edge(i, j));
             }
         }
         
@@ -304,13 +304,49 @@ describe('hasEdge() method tests', () => {
     });
 });
 
+describe('hasVertex() method tests', () => {
+    it('should have all vertices in the graph with 3 vertices', () => {
+        // given 
+        const componentManager: IComponentManager = new SetBasedComponentManager(_.range(3).map(n => new Vertex(n)));
+        
+        // when
+
+        // then
+        for (let i = 0; i < 3; i++) {
+            expect(componentManager.hasVertex(new Vertex(i))).toBeTruthy();
+        }
+    });
+
+    it('should not have specific vertices in the graph with 1 vertex', () => {
+        // given 
+        const componentManager: IComponentManager = new SetBasedComponentManager([new Vertex(0)]);
+        
+        // when
+        const result = componentManager.hasVertex(new Vertex(3));
+        
+        // then
+        expect(result).toBeFalsy();
+    });
+
+    it('should not have specific vertices in the graph with 2 vertices', () => {
+        // given 
+        const componentManager: IComponentManager = new SetBasedComponentManager([new Vertex(0), new Vertex(3)]);
+        
+        // when
+        const result = componentManager.hasVertex(new Vertex(2));
+        
+        // then
+        expect(result).toBeFalsy();
+    });
+});
+
 describe('removeEdge() method tests', () => {
     it('should remove edge from graph with 4 vertices', () => {
         // given 
         const componentManager: IComponentManager = new SetBasedComponentManager(_.range(4).map(n => new Vertex(n)));
         for (let i = 0; i < 4; i++) {
             for (let j = 0; j < 4; j++) {
-                componentManager.addEgde(new Edge(i, j));
+                componentManager.addEdge(new Edge(i, j));
             }
         }
 
@@ -334,7 +370,7 @@ describe('removeEdge() method tests', () => {
         const componentManager: IComponentManager = new SetBasedComponentManager(_.range(4).map(n => new Vertex(n)));
         for (let i = 0; i < 4; i++) {
             for (let j = 0; j < 4; j++) {
-                componentManager.addEgde(new Edge(i, j));
+                componentManager.addEdge(new Edge(i, j));
             }
         }
 
@@ -392,12 +428,13 @@ describe('getEdges() method tests', () => {
     it('should return 2 edges', () => {
         // given 
         const componentManager: IComponentManager = new SetBasedComponentManager(_.range(3).map(n => new Vertex(n)));
-        componentManager.addEgde(new Edge(0, 1));
-        componentManager.addEgde(new Edge(1, 2));
+        componentManager.addEdge(new Edge(0, 1));
+        componentManager.addEdge(new Edge(1, 2));
 
         // when
         const edges = componentManager.getEdges();
 
+        console.log(edges);
         // then
         expect(edges.length).toEqual(2);
         for (const edge of edges) {
@@ -506,164 +543,5 @@ describe('addRandomEdgesSize() method tests', () => {
 
         // then
         expect(edges.length).toEqual(77);
-    });
-});
-
-describe("split() method tests", () => {
-    test('component manager should split component into three components', () => {
-        // given 
-        const componentManager: IComponentManager = new SetBasedComponentManager([
-            new Vertex(0),
-            new Vertex(1),
-            new Vertex(2),
-            new Vertex(3),
-            new Vertex(4),
-            new Vertex(5),
-            new Vertex(6)
-        ]);
-
-        // when
-        componentManager.addEgde(new Edge(0, 1));
-        componentManager.addEgde(new Edge(0, 2));
-        componentManager.addEgde(new Edge(1, 2));
-        componentManager.addEgde(new Edge(3, 4));
-        componentManager.addEgde(new Edge(5, 6));
-
-        const components: Component[] = componentManager.split();
-        
-        // then
-        expect(components.length).toBe(3);
-    });
-
-    test('component manager should not split component, instad create a copy of existing tree', () => {
-        // given 
-        const componentManager: IComponentManager = new SetBasedComponentManager([
-            new Vertex(0),
-            new Vertex(1),
-            new Vertex(2),
-            new Vertex(3)
-        ]);
-
-        // when
-        componentManager.initializeTree();
-
-        const components: Component[] = componentManager.split();
-
-        // then
-        expect(components.length).toBe(1);
-        expect(components[0]).not.toBeUndefined();
-        expect(components[0]).not.toBeFalsy();
-        expect(components[0].vertices.length).toEqual(4);
-        expect(components[0].edges.length).toEqual(3);
-    });
-
-    test('component manager should not split component, instad create a copy of existing full graph', () => {
-        // given 
-        const componentManager: IComponentManager = new SetBasedComponentManager([
-            new Vertex(0),
-            new Vertex(1),
-            new Vertex(2),
-            new Vertex(3)
-        ]);
-        componentManager.addEgde(new Edge(0, 1));
-        componentManager.addEgde(new Edge(0, 2));
-        componentManager.addEgde(new Edge(0, 3));
-        componentManager.addEgde(new Edge(1, 2));
-        componentManager.addEgde(new Edge(1, 3));
-        componentManager.addEgde(new Edge(2, 3));
-
-        // when
-        const components: Component[] = componentManager.split();
-
-        // then
-        expect(components.length).toBe(1);
-        expect(components[0]).not.toBeUndefined();
-        expect(components[0]).not.toBeFalsy();
-        expect(components[0].vertices.length).toEqual(4);
-        expect(components[0].edges.length).toEqual(6);
-    })
-
-    test('component manager should not split empty component', () => {
-        // given 
-        const componentManager: IComponentManager = new SetBasedComponentManager([]);
-        
-        // when
-        const components: Component[] = componentManager.split();
-
-        // then
-        expect(components.length).toBe(0);
-    });
-
-    test('component manager create exact copy of component with one vertex', () => {
-        // given 
-        const componentManager: IComponentManager = new SetBasedComponentManager([new Vertex(0)]);
-        
-        // when
-        const components: Component[] = componentManager.split();
-
-        // then
-        expect(components.length).toBe(1);
-        expect(components[0]).not.toBeUndefined();
-        expect(components[0]).not.toBeFalsy();
-        expect(components[0].vertices.length).toEqual(1);
-        expect(components[0].edges.length).toEqual(0);
-    });
-
-    test('component manager should split into two components', () => {
-        // given 
-        const componentManager: IComponentManager = new SetBasedComponentManager([
-            new Vertex(0),
-            new Vertex(1),
-            new Vertex(2),
-            new Vertex(3)
-        ]);
-        componentManager.addEgde(new Edge(0, 1));
-        componentManager.addEgde(new Edge(1, 2));
-        componentManager.addEgde(new Edge(2, 3));
-        
-        // when
-        componentManager.removeEdge(new Edge(1, 2));
-        const components: Component[] = componentManager.split();
-
-        // then
-        expect(components.length).toBe(2);
-        for (const component of components) {
-            expect(component).not.toBeUndefined();
-            expect(component).not.toBeFalsy();
-            expect(component.vertices.length).toEqual(2);
-            expect(component.edges.length).toEqual(1);
-        }
-    });
-
-    test('component manager should split and preserve edge weights', () => {
-        // given 
-        const componentManager: IComponentManager = new SetBasedComponentManager([
-            new Vertex(0),
-            new Vertex(1),
-            new Vertex(2),
-            new Vertex(3)
-        ]);
-        componentManager.addEgde(new Edge(0, 1, 1.23333));
-        componentManager.addEgde(new Edge(1, 2, -0.22));
-        componentManager.addEgde(new Edge(2, 3, 250.22));
-        
-        // when
-        componentManager.removeEdge(new Edge(1, 2));
-        const components: Component[] = componentManager.split();
-
-        // then
-        expect(components.length).toBe(2);
-        for (const component of components) {
-            expect(component).not.toBeUndefined();
-            expect(component).not.toBeFalsy();
-            expect(component.edges).not.toBeUndefined();
-            expect(component.edges).not.toBeFalsy();
-            expect(component.edges.length).toEqual(1);
-            if (component.edges[0].startVertex === 0 && component.edges[0].endVertex === 1) {
-                expect(component.edges[0].weight).toBeCloseTo(1.23333);
-            } else if (component.edges[0].startVertex === 2 && component.edges[0].endVertex === 3) {
-                expect(component.edges[0].weight).toBeCloseTo(250.22);
-            }
-        }
     });
 });

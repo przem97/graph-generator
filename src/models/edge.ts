@@ -13,8 +13,11 @@ class Edge {
         this.weight = weight;
     }
 
-    toIndex(vertexToIndex: Dictionary<number>): Edge {
-        return new Edge(vertexToIndex[this.startVertex], vertexToIndex[this.endVertex], this.weight);
+    toIndex(vertexToIndex: Map<number, number>): Edge {
+        const startVertex = vertexToIndex.get(this.startVertex);
+        const endVertex = vertexToIndex.get(this.endVertex);
+        return new Edge((startVertex === undefined) ? NaN : startVertex,
+                        (endVertex === undefined) ? NaN :endVertex, this.weight);
     }
 
     static fromVertices(startVertex: Vertex, endVertex: Vertex, weight: number = 0): Edge {
