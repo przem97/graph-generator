@@ -1,8 +1,9 @@
 import _ from "lodash";
+import Edge from "../../../models/edge";
 import Component from "../../../models/component";
-import IComponentManager from "../../../utils/component/componentManager.interface";
+import IComponentManager from "../../../utils/component/manager/componentManager.interface";
 import IEdgeInitializer from "./edgeInitializer.interface";
-import SetBasedComponentManager from "../../../utils/component/setBasedComponentManager";
+import SetBasedComponentManager from "../../../utils/component/manager/setBasedComponentManager";
 
 export default class EdgeInitializer implements IEdgeInitializer {
     readonly totalEdges: number;
@@ -54,7 +55,9 @@ export default class EdgeInitializer implements IEdgeInitializer {
                 availableComponents.splice(randomIndex, 1)
             }
         }
-        
+
+        const resultComponents: Component[] = [];
+
         // initialize edges within each component
         for (let i = 0; i < components.length; i += 1) {
             let graphManager: IComponentManager = new SetBasedComponentManager(components[i].vertices)
@@ -66,19 +69,27 @@ export default class EdgeInitializer implements IEdgeInitializer {
             // add the remaining number of edges randomly
             graphManager.addRandomEdgesSize(size)
             
-            components[i].edges = graphManager.getEdges()
+            resultComponents.push(new Component(graphManager.getEdges(), [ ...components[i].vertices ]));
         }
 
-        return components;
+        return resultComponents;
     }
 
-    initializeWeights(components: Array<Component>) {
+    initializeWeights(components: Array<Component>): Component[] {
+        const newComponents: Component[] = [];
+
         for (let i = 0; i < components.length; i += 1) {
             let component = components[i];
+            let edges: Edge[] = [];
             for (let j = 0; j < component.edges.length; j += 1) {
                 let randomWeight = _.random(this.edgeWeightLowerBound, this.edgeWeightUpperBound, true);
-                component.edges[j].weight = _.round(randomWeight, 2);
+                const weight = _.round(randomWeight, 2);
+                edges.push(new Edge(component.edges[j].startVertex, component.edges[j].endVertex, weight));
             }
+
+            newComponents.push(new Component(edges, [ ...component.vertices ]));
         }
+
+        return newComponents;
     }
 }

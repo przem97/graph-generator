@@ -31,10 +31,10 @@ describe("1 component, 2 vertices and 1 edge scenario", () => {
         edgeInitializer = new EdgeInitializer(totalEdges, 0, 0);
 
         // when
-        edgeInitializer.initializeEdges(components);
+        const resultComponents = edgeInitializer.initializeEdges(components);
 
         // then
-        expect(components[0].edges.length).toEqual(1);
+        expect(resultComponents[0].edges.length).toEqual(1);
     });
     
     it('should initialize edge weight between 2 and 3', () => {
@@ -47,9 +47,9 @@ describe("1 component, 2 vertices and 1 edge scenario", () => {
             edgeWeightUpperBound);
 
         // when
-        edgeInitializer.initializeEdges(components);
-        edgeInitializer.initializeWeights(components)
-        const weight = components[0].edges[0].weight; 
+        let resultComponents = edgeInitializer.initializeEdges(components);
+        resultComponents = edgeInitializer.initializeWeights(resultComponents)
+        const weight = resultComponents[0].edges[0].weight; 
 
         // then
         expect(weight).toBeGreaterThanOrEqual(2);
@@ -66,9 +66,9 @@ describe("1 component, 2 vertices and 1 edge scenario", () => {
             edgeWeightUpperBound);
 
         // when
-        edgeInitializer.initializeEdges(components);
-        edgeInitializer.initializeWeights(components)
-        const weight = components[0].edges[0].weight; 
+        let resultComponents = edgeInitializer.initializeEdges(components);
+        resultComponents = edgeInitializer.initializeWeights(resultComponents)
+        const weight = resultComponents[0].edges[0].weight; 
 
         // then
         expect(weight).toBeGreaterThanOrEqual(-15);
@@ -97,10 +97,10 @@ describe("1 component, 8 vertices and 12 edges scenario", () => {
         edgeInitializer = new EdgeInitializer(totalEdges, 0, 0);
 
         // when
-        edgeInitializer.initializeEdges(components);
+        let resultComponents = edgeInitializer.initializeEdges(components);
 
         // then
-        expect(components[0].edges.length).toEqual(12);
+        expect(resultComponents[0].edges.length).toEqual(12);
     });
     
     it('should initialize all edges weight between -1 and 8', () => {
@@ -113,11 +113,12 @@ describe("1 component, 8 vertices and 12 edges scenario", () => {
             edgeWeightUpperBound);
 
         // when
-        edgeInitializer.initializeEdges(components);
-        edgeInitializer.initializeWeights(components)
+        let resultComponents = edgeInitializer.initializeEdges(components);
+        resultComponents = edgeInitializer.initializeWeights(resultComponents);
+
         // then
-        for (let i = 0; i < components[0].edges.length; i++) {
-            const weight = components[0].edges[i].weight; 
+        for (let i = 0; i < resultComponents[0].edges.length; i++) {
+            const weight = resultComponents[0].edges[i].weight; 
     
             expect(weight).toBeGreaterThanOrEqual(-1);
             expect(weight).toBeLessThanOrEqual(8);
