@@ -35,7 +35,7 @@ describe('should initialize x between 2 and 3 and y between 0 an 9', () => {
     beforeAll(() => {
         components = graphInitializer.initializeGraph();
         testee = new CoordinatesInitializer(2, 3, 0, 9);
-        testee.initializeCoordinates(components);
+        components = testee.initializeCoordinates(components);
     });
 
     test('should initialize x coordinates between 2 and 3', () => {
@@ -64,7 +64,7 @@ describe('should initialize x between -3 and 2 and y between -4 an 19', () => {
     beforeAll(() => {
         components = graphInitializer.initializeGraph();
         testee = new CoordinatesInitializer(2, -3, 19, -4);
-        testee.initializeCoordinates(components);
+        components = testee.initializeCoordinates(components);
     });
 
     test('should initialize x coordinates between -3 and 2', () => {

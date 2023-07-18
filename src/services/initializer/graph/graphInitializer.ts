@@ -23,8 +23,8 @@ class GraphInitializer implements IGraphInitializer {
     initializeGraph(): Array<Component> { 
         let components = this.componentInitializer.initializeComponents();
         this.vertexInitializer.initializeVertices(components);
-        this.edgeInitializer.initializeEdges(components)
-        this.edgeInitializer.initializeWeights(components);
+        components = this.edgeInitializer.initializeEdges(components)
+        components = this.edgeInitializer.initializeWeights(components);
         return components;
     }
 }
