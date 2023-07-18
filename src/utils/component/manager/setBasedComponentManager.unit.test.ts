@@ -433,7 +433,6 @@ describe('getEdges() method tests', () => {
         // when
         const edges = componentManager.getEdges();
 
-        console.log(edges);
         // then
         expect(edges.length).toEqual(2);
         for (const edge of edges) {

@@ -9,6 +9,10 @@ class Component {
         this.edges = edges;
         this.vertices = vertices;
     }
+
+    isEmpty(): boolean {
+        return this.edges.length === 0 && this.vertices.length === 0; 
+    }
 }
 
 export default Component
