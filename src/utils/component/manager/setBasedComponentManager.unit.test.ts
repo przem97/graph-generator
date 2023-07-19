@@ -182,7 +182,7 @@ describe('addEdge() method tests', () => {
         const componentManager: IComponentManager = new SetBasedComponentManager(_.range(3).map(n => new Vertex(n)));
         
         // when
-        componentManager.addEdge(new Edge(0, 1, 0.789));
+        const result: Boolean = componentManager.addEdge(new Edge(0, 1, 0.789));
         
         // then
         expect(componentManager.getEdges().length).toEqual(1);
@@ -190,6 +190,7 @@ describe('addEdge() method tests', () => {
         expect(componentManager.getEdges()[0].startVertex).toEqual(0);
         expect(componentManager.getEdges()[0].endVertex).toEqual(1);
         expect(componentManager.getEdges()[0].weight).toBeCloseTo(0.789);
+        expect(result).toBeTruthy();
     });
 
     it('should add 3 edges', () => {
@@ -197,13 +198,16 @@ describe('addEdge() method tests', () => {
         const componentManager: IComponentManager = new SetBasedComponentManager(_.range(3).map(n => new Vertex(n)));
         
         // when
-        componentManager.addEdge(new Edge(0, 1));
-        componentManager.addEdge(new Edge(0, 2));
-        componentManager.addEdge(new Edge(1, 2));
+        const result1: Boolean =componentManager.addEdge(new Edge(0, 1));
+        const result2: Boolean =componentManager.addEdge(new Edge(0, 2));
+        const result3: Boolean =componentManager.addEdge(new Edge(1, 2));
         
         // then
         expect(componentManager.getEdges().length).toEqual(3);
         expect(componentManager.getVertices().length).toEqual(3);
+        expect(result1).toBeTruthy();
+        expect(result2).toBeTruthy();
+        expect(result3).toBeTruthy();
         
         for (const edge of componentManager.getEdges()) {
             if (edge.startVertex === 0) {
@@ -212,6 +216,19 @@ describe('addEdge() method tests', () => {
                 expect(edge.endVertex).toEqual(2);
             }
         }
+    });
+
+    it('should not add non existing edge whithin the component', () => {
+        // given 
+        const componentManager: IComponentManager = new SetBasedComponentManager(_.range(3).map(n => new Vertex(n)));
+        
+        // when
+        const result: Boolean = componentManager.addEdge(new Edge(1, 12));
+        
+        // then
+        expect(componentManager.getEdges().length).toEqual(0);
+        expect(componentManager.getVertices().length).toEqual(3);
+        expect(result).toBeFalsy();
     });
 });
 

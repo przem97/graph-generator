@@ -5,7 +5,7 @@ import Component from "../../../models/component";
 export default interface IComponentManager {
     isFull(): Boolean;
     initializeTree(): number;
-    addEdge(edge: Edge): void;
+    addEdge(edge: Edge): Boolean;
     hasEdge(edge: Edge): Boolean;
     hasVertex(vertex: Vertex): Boolean;
     getEdgeWeight(edge: Edge): number | null;

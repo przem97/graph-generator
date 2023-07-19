@@ -84,12 +84,14 @@ class SetBasedComponentManager implements IComponentManager {
         return this.vertices.length - 1
     }
 
-    addEdge(edge: Edge): void {
+    addEdge(edge: Edge): Boolean {
         let edgeNumber: number = this.edgeToNumber(edge);
         if (this.notInitializedNumbers.delete(edgeNumber)) {
             this.numbers.add(edgeNumber);
             this.edgeWeight.set(edgeNumber, edge.weight);
+            return true;
         }
+        return false;
     }
 
     getEdgeWeight(edge: Edge): number | null {
