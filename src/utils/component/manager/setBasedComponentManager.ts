@@ -1,5 +1,4 @@
 import _ from "lodash";
-import { Dictionary } from "lodash";
 import Edge from "../../../models/edge";
 import Vertex from "../../../models/vertex";
 import Component from "../../../models/component";
