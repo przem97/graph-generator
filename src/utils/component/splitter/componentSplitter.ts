@@ -57,8 +57,4 @@ export default class ComponentSplitter implements IComponentSplitter {
 
         return components;
     }
-
-    splitComponents(components: Component[]): Component[] {
-        return [];
-    }
 }
