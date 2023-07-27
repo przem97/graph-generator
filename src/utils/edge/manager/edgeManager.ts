@@ -5,6 +5,7 @@ import ComponentMerger from "../../component/merger/componentMerger";
 import IEdgeManager from "./edgeManager.interface";
 import IComponentManager from "../../component/manager/componentManager.interface";
 import SetBasedComponentManager from "../../component/manager/setBasedComponentManager";
+import ComponentSplitter from "../../component/splitter/componentSplitter";
 
 class EdgeManager implements IEdgeManager {
     addEdge(components: Component[], edge: Edge): Component[] {
@@ -45,6 +46,25 @@ class EdgeManager implements IEdgeManager {
         }
 
         return componentManagers.map(c => c.getComponent());
+    }
+
+    removeEdge(components: Component[], edge: Edge): Component[] {
+        const resultComponents: Component[] = [];
+
+        for (const component of components) {
+            const manager = SetBasedComponentManager.ofComponent(component);
+            if (manager.hasEdge(edge)) {
+                manager.removeEdge(edge);
+
+                const splittedComponents: Component[] = new ComponentSplitter().split(manager.getComponent());
+                
+                splittedComponents.forEach(c => resultComponents.push(c));
+            } else {
+                resultComponents.push(component);
+            }
+        }
+        
+        return resultComponents;
     }
 }
 
