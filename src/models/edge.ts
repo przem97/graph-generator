@@ -1,4 +1,4 @@
-import { Dictionary } from "lodash"
+import { Request } from "express";
 import Vertex from "./vertex";
 
 class Edge {
@@ -26,6 +26,14 @@ class Edge {
 
     static fromVertices(startVertex: Vertex, endVertex: Vertex, weight: number = 0): Edge {
         return new Edge(startVertex.ordinal, endVertex.ordinal, weight);
+    }
+
+    static fromRequest(req: Request): Edge {
+        const edge: Edge = new Edge(0, 0, 0);
+
+        Object.assign(edge, req.body.edge);
+   
+        return edge;
     }
 }
 
