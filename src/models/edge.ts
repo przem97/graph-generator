@@ -20,6 +20,10 @@ class Edge {
                         (endVertex === undefined) ? NaN :endVertex, this.weight);
     }
 
+    hasVertex(vertex: Vertex): Boolean {
+        return this.startVertex === vertex.ordinal || this.endVertex === vertex.ordinal;
+    }
+
     static fromVertices(startVertex: Vertex, endVertex: Vertex, weight: number = 0): Edge {
         return new Edge(startVertex.ordinal, endVertex.ordinal, weight);
     }
