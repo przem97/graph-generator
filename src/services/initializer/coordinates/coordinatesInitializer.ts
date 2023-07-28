@@ -34,9 +34,7 @@ class CoordinatesInitializer implements ICoordinatesInitializer {
         const resultComponents = [];
 
         for (let i = 0; i < components.length; i++) {
-            for (let j = 0; j < components[i].vertices.length; j++) {
-                resultComponents.push(this.initializeCoordinatesForComponent(components[i]));
-            }
+            resultComponents.push(this.initializeCoordinatesForComponent(components[i]));
         }
 
         return resultComponents;

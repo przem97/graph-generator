@@ -41,9 +41,8 @@ router.post('/initialize', (req: Request, res: Response) => {
     let coordinatesInitializer: ICoordinatesInitializer = new CoordinatesInitializer(xAxisLowerBound,
         xAxisUpperBound, yAxisLowerBound, yAxisUpperBound);
 
-    const components: Array<Component> = graphInitializer.initializeGraph();
-
-    coordinatesInitializer.initializeCoordinates(components); 
+    let components: Array<Component> = graphInitializer.initializeGraph();
+    components = coordinatesInitializer.initializeCoordinates(components); 
 
     res.send({ "graph": {
         "components": components
