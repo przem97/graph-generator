@@ -29,7 +29,7 @@ beforeAll(() => {
     );
 });
 
-describe('should initialize x between 2 and 3 and y between 0 an 9', () => {
+describe('initializeCoordinates() method tests', () => {
     let testee: ICoordinatesInitializer;
 
     beforeAll(() => {
