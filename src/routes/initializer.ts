@@ -28,9 +28,11 @@ router.post('/initialize', (req: Request, res: Response) => {
     let yAxisLowerBound = req.body.yAxisLowerBound ? req.body.yAxisLowerBound : -100;
     let yAxisUpperBound = req.body.yAxisUpperBound ? req.body.yAxisUpperBound : 100;
 
+    let startOrdinal = req.body.startOrdinal ? req.body.startOrdinal : 0;
+
     let componentInitializer: IComponentInitializer = new ComponentInitializer(totalComponents);
     let edgeInitializer: IEdgeInitializer = new EdgeInitializer(totalEdges, edgeWeightLowerBound, edgeWeightUpperBound);
-    let vertexInitializer: IVertexInitializer = new VertexInitializer(totalVertices);
+    let vertexInitializer: IVertexInitializer = new VertexInitializer(totalVertices, startOrdinal);
 
     let graphInitializer: IGraphInitializer = new GraphInitializer(
         componentInitializer,
