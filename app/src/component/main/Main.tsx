@@ -4,6 +4,7 @@ import GridDrawer from '../../draw/standard/grid.drawer';
 import GraphDrawer from '../../draw/standard/graph.drawer';
 import { IGridDrawer, IGraphDrawer } from '../../draw';
 import { styled } from 'styled-components';
+import CanvasStateStats from '../canvasState/CanvasState';
 
 export default function Main() {
     const drawer: IGridDrawer = new GridDrawer();
@@ -12,10 +13,12 @@ export default function Main() {
     return (
         <MainContainer>
             <Canvas canvasDrawer={drawer} graphDrawer={graphDrawer} />
+            <CanvasStateStats />
         </MainContainer>
     )
 }
 
 const MainContainer = styled.main`
+    position: relative;
     background-color: rgb(246, 246, 246);
 `

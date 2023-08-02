@@ -8,6 +8,7 @@ import { NodeUtils } from '../../model/util/nodeUtils';
 import { ComponentUtils } from '../../model/util/componentUtils';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { initCanvas } from '../../draw/standard/canvas.drawer';
+import { styled } from 'styled-components';
 
 type CanvasProps = {
   canvasDrawer: IGridDrawer,
@@ -79,8 +80,14 @@ export default function Canvas({ canvasDrawer, graphDrawer } : CanvasProps) {
     }, [strategy]);
 
     return (
-        <canvas ref={canvasRef} id="myCanvas" className="main-canvas">
-            Your browser does not support the canvas element.
-        </canvas>
+        <CanvasContainer>
+            <canvas ref={canvasRef} id="myCanvas" className="main-canvas">
+                Your browser does not support the canvas element.
+            </canvas>
+        </CanvasContainer>
     )
 }
+
+const CanvasContainer = styled.div`
+    position: static;
+`
