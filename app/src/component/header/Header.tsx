@@ -3,9 +3,7 @@ import { styled } from 'styled-components';
 import { CustomApplicationButton } from '../common/Button';
 import { useAppDispatch } from '../../redux/hooks';
 import { saveComponents } from '../../redux/reducers';
-import Component, { ComponentType } from '../../model/component';
-import Node, { NodeType } from '../../model/node';
-import Edge, { EdgeType } from '../../model/edge';
+import Component from '../../model/component';
 import axios from 'axios';
 
 export const DEFAULT_HEADER_HEIGHT = 50;
@@ -25,7 +23,7 @@ export default function Header() {
 
     const generateGraph = () => axios({
             method: 'post',
-            url: 'http://localhost:3000/graph/initialize',
+            url: 'http://localhost:3010/graph/initialize',
             data: {
                 "totalVertices": vertices,
                 "totalEdges": edges,
@@ -37,30 +35,8 @@ export default function Header() {
                 "edgeWeightLowerBound": -5,
                 "edgeWeightUpperBound": -1
             }
-          }).then((response) => {
-            let components = response.data.graph.components;
-            let newComponents: ComponentType[] = [];
-            for (let i = 0; i < components.length; i++) {
-                let component = components[i];
-                const edges: EdgeType[] = [];
-
-                for (let j = 0; j < component.edges.length; j++) {
-                    let edge = component.edges[j];
-                    edges.push(Edge.create(edge.startVertex, edge.endVertex, edge.weight));
-                }
-
-                const nodes: NodeType[] = [];
-                for (let j = 0; j < component.vertices.length; j++) {
-                    let node = component.vertices[j];
-                    nodes.push(Node.create(node.x, node.y, node.ordinal));
-                }
-
-                newComponents.push(Component.create(nodes, edges));
-            }
-
-            // response.data.pipe(fs.createWriteStream('ada_lovelace.jpg'))
-            dispatch(saveComponents({components: newComponents}));
-          }).catch((error) => {
+          }).then((response) => dispatch(saveComponents({ components: Component.fromResponse(response) }))
+          ).catch((error) => {
             console.log('An error occurred during graph generation', error);
           });
 
