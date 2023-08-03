@@ -5,7 +5,7 @@ export type NodeType = {
 }
 
 export default class Node {
-    static create(x: number, y: number, ordinal: number = -1): NodeType {
+    static create(x: number, y: number, ordinal: number): NodeType {
         return {
             x: x,
             y: y,

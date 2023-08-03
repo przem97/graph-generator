@@ -29,11 +29,11 @@ export default function Canvas({ canvasDrawer, graphDrawer } : CanvasProps) {
             const node: NodeType = NodeUtils.fromClickEvent(event, canvas);
 
             if (NodeDrawingStrategy.Add == strategy) {
-                dispatch(addNode(Node.create(node.x, node.y)));
+                dispatch(addNode(Node.create(node.x, node.y, -1)));
             }
     
             if (NodeDrawingStrategy.Remove == strategy) {
-                dispatch(removeNode(Node.create(node.x, node.y)));
+                dispatch(removeNode(Node.create(node.x, node.y, -1)));
             }
     
             if (NodeDrawingStrategy.Edit == strategy) {

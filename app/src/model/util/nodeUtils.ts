@@ -12,7 +12,7 @@ export class NodeUtils {
         const x = (event.clientX - (canvasCenterX + DEFAULT_SIDEBAR_WIDTH)) / (2 * LEADING);
         const y = -(event.clientY - (canvasCenterY + DEFAULT_HEADER_HEIGHT)) / (2 * LEADING);
 
-        return Node.create(x, y);
+        return Node.create(x, y, -1);
     }
 
     static toCanvasCssPixels(node: NodeType, canvasCenterX: number, canvasCenterY: number): NodeType {
@@ -20,7 +20,7 @@ export class NodeUtils {
         
         let newX = scale * (canvasCenterX + 2 * LEADING * node.x);
         let newY = scale * (canvasCenterY - 2 * LEADING * node.y);
-        return Node.create(newX, newY);
+        return Node.create(newX, newY, -1);
     }
 
     static intersect(current: NodeType, target: NodeType): boolean {
