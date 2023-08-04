@@ -3,14 +3,14 @@ import Edge, { EdgeType } from "./edge";
 import { AxiosResponse } from "axios";
 
 export type ComponentType = {
-  nodes: NodeType[],
+  vertices: NodeType[],
   edges: EdgeType[]
 }
 
 export default class Component {
-  static create(nodes: NodeType[], edges: EdgeType[]): ComponentType {
+  static create(vertices: NodeType[], edges: EdgeType[]): ComponentType {
       return {
-          nodes: nodes,
+          vertices: vertices,
           edges: edges
       }
   }

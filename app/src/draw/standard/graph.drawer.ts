@@ -37,8 +37,8 @@ export default class GraphDrawer implements IGraphDrawer {
             const component = componentsList[i];
             for (let j = 0; j < component.edges.length; j++) {
                 const edge = component.edges[j];;
-                const nodeFrom: NodeType = component.nodes.filter((node) => node.ordinal === edge.startVertex)[0];
-                const nodeTo: NodeType = component.nodes.filter((node) => node.ordinal === edge.endVertex)[0];
+                const nodeFrom: NodeType = component.vertices.filter((node) => node.ordinal === edge.startVertex)[0];
+                const nodeTo: NodeType = component.vertices.filter((node) => node.ordinal === edge.endVertex)[0];
 
                 if (nodeFrom && nodeTo) {
                     this.drawEdge(canvas, nodeFrom, nodeTo);
@@ -48,7 +48,7 @@ export default class GraphDrawer implements IGraphDrawer {
 
         for (let i = 0; i < componentsList.length; i++) {
             const component = componentsList[i];
-            this.drawNodes(canvas, component.nodes);
+            this.drawNodes(canvas, component.vertices);
         }
     }
 
