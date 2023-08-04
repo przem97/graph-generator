@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { NodeType } from "../../../model/node";
 import { ComponentType } from "../../../model/component";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { NodeUtils } from "../../../model/util/nodeUtils";
+import Node from "../../../model/node";
 
 type RemoveNodeThunkType = {
     targetEventNode: NodeType,
@@ -12,19 +12,7 @@ type RemoveNodeThunkType = {
 export const removeNode = createAsyncThunk<any, RemoveNodeThunkType>(
     'removeNode',
     async ({ targetEventNode, components }, thunkApi) => {
-        let vertexToRemove: NodeType | null = null;
-
-        for (let i = 0; i < components.length; i++) {
-            const component = components[i];
-            for (let j = 0; j < component.vertices.length; j++) {
-                const currentVertex = component.vertices[j];
-
-                if (NodeUtils.intersect(currentVertex, targetEventNode)) {
-                    vertexToRemove = currentVertex;
-                    break;
-                }
-            }
-        }
+        let vertexToRemove: NodeType | null = Node.fromClickEvent(targetEventNode, components);
 
         const response: AxiosResponse = await axios({
                     method: 'DELETE',

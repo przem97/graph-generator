@@ -3,7 +3,7 @@ import { IGridDrawer, IGraphDrawer } from '../../draw';
 import { NodeType } from '../../model/node';
 import { ComponentType } from '../../model/component';
 import { NodeDrawingStrategy } from '../../draw/strategy/node.draw.strategy';
-import { NodeUtils } from '../../model/util/nodeUtils';
+import Node from '../../model/node';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { initCanvas } from '../../draw/standard/canvas.drawer';
 import { styled } from 'styled-components';
@@ -45,9 +45,9 @@ export default function Canvas({ canvasDrawer, graphDrawer } : CanvasProps) {
         const canvasClickEventListener = (strategy: NodeDrawingStrategy, components: ComponentType[]) => {
             return (event : PointerEvent) => {
                 const canvas : any = canvasRef.current;
-                const targetEventNode: NodeType = NodeUtils.fromClickEvent(event, canvas);
+                const targetEventNode: NodeType = Node.fromCanvasClickEvent(event, canvas);
     
-                if (NodeDrawingStrategy.Remove == strategy) {
+                if (strategy == NodeDrawingStrategy.Remove) {
                     dispatch(removeNode({ targetEventNode, components }));
                 }
             }

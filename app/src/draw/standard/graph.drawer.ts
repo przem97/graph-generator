@@ -2,7 +2,6 @@ import { IGraphDrawer } from "./interface/graph.drawer.interface";
 import Node, { NodeType } from '../../model/node';
 import { ComponentType } from '../../model/component';
 import { getCanvasCenter } from '../../utils/canvasUtils';
-import { NodeUtils } from "../../model/util/nodeUtils";
 
 export const RADIUS: number = 30;
 
@@ -14,7 +13,7 @@ export default class GraphDrawer implements IGraphDrawer {
 
         if (context) {
             const { canvasCenterX, canvasCenterY } = getCanvasCenter(canvas);
-            const cssCanvasNode = NodeUtils.toCanvasCssPixels(node, canvasCenterX, canvasCenterY);
+            const cssCanvasNode = Node.toCanvasCssPixels(node, canvasCenterX, canvasCenterY);
 
             context.fillStyle = "#e2b881";
             context.beginPath();
@@ -57,8 +56,8 @@ export default class GraphDrawer implements IGraphDrawer {
 
         if (context) {
             const { canvasCenterX, canvasCenterY } = getCanvasCenter(canvas);
-            const cssCanvasFromNode = NodeUtils.toCanvasCssPixels(from, canvasCenterX, canvasCenterY);
-            const cssCanvasToNode = NodeUtils.toCanvasCssPixels(to, canvasCenterX, canvasCenterY);
+            const cssCanvasFromNode = Node.toCanvasCssPixels(from, canvasCenterX, canvasCenterY);
+            const cssCanvasToNode = Node.toCanvasCssPixels(to, canvasCenterX, canvasCenterY);
 
             context.fillStyle = "#000000";
             context.beginPath();

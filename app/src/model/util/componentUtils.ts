@@ -1,8 +1,7 @@
 import Component, { ComponentType } from "../component";
 import * as _ from "lodash";
-import { NodeType } from "../node";
+import Node, { NodeType } from "../node";
 import { EdgeType } from "../edge";
-import { NodeUtils } from './nodeUtils';
 
 export class ComponentUtils {
     static getNextNodeOrdinal(components: ComponentType[]): number {
@@ -26,7 +25,7 @@ export class ComponentUtils {
             for (let j = 0; j < component.vertices.length; j++) {
                 const currentNode = component.vertices[j];
 
-                if (NodeUtils.intersect(currentNode, node)) {
+                if (Node.intersect(currentNode, node)) {
                     return currentNode.ordinal;
                 }
             }
