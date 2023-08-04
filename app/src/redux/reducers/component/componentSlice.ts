@@ -2,16 +2,15 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { ComponentType } from '../../../model/component';
 import { removeNode } from '../../thunks/vertex/removeNodeThunk';
+import { addEdgeThunk } from '../../thunks/edge/addEdgeThunk';
 import { RootState } from '../../store/store';
 
 export type ComponentStateType = {
     components: ComponentType[]
-    connectAccumulator: number[];
 }
 
 const initialState = {
-    components: [],
-    connectAccumulator: []
+    components: []
 } as ComponentStateType
 
 type SaveComponentsPayloadActionType = {
@@ -28,6 +27,10 @@ const componentSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(removeNode.fulfilled, (state, { payload }) => {
+            state.components = payload;
+        });
+
+        builder.addCase(addEdgeThunk.fulfilled, (state, { payload }) => {
             state.components = payload;
         });
     }

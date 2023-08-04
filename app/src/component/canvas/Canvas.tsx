@@ -9,6 +9,9 @@ import { initCanvas } from '../../draw/standard/canvas.drawer';
 import { styled } from 'styled-components';
 import { removeNode } from '../../redux/thunks/vertex/removeNodeThunk';
 import { selectComponents } from '../../redux/reducers/component/componentSlice';
+import { connectAccumulatorPush, selectConnectAccumulator } from '../../redux/reducers/edge/edgeSlice';
+import { selectStrategy } from '../../redux/reducers/strategy/draw/strategySlice';
+import { addEdgeThunk } from '../../redux/thunks/edge/addEdgeThunk';
 
 type CanvasProps = {
   canvasDrawer: IGridDrawer,
@@ -18,8 +21,9 @@ type CanvasProps = {
 export default function Canvas({ canvasDrawer, graphDrawer } : CanvasProps) {
     const canvasRef = useRef(null);
 
-    const strategy: NodeDrawingStrategy = useAppSelector(state => state.strategyReducer.strategy);
+    const strategy: NodeDrawingStrategy = useAppSelector(selectStrategy);
     const components: ComponentType[] = useAppSelector(selectComponents);
+    const connectAccumulator: number[] = useAppSelector(selectConnectAccumulator);
 
     const dispatch = useAppDispatch();
 
@@ -43,18 +47,30 @@ export default function Canvas({ canvasDrawer, graphDrawer } : CanvasProps) {
     }, [components]);
 
     useEffect(() => {
-        const canvasClickEventListener = (strategy: NodeDrawingStrategy, components: ComponentType[]) => {
+        const canvasClickEventListener = (strategy: NodeDrawingStrategy,
+                                          components: ComponentType[],
+                                          connectAccumulator: number[]) => {
             return (event : PointerEvent) => {
                 const canvas : any = canvasRef.current;
                 const targetEventNode: NodeType = Node.fromCanvasClickEvent(event, canvas);
     
                 if (strategy == NodeDrawingStrategy.Remove) {
                     dispatch(removeNode({ targetEventNode, components }));
+                } else if (strategy == NodeDrawingStrategy.Connect) {
+                    const node = Node.fromClickEvent(targetEventNode, components);
+                    if (node) {    
+                        if (connectAccumulator.length == 0) {
+                            dispatch(connectAccumulatorPush({ nodeOrdinal: node.ordinal }));
+                        } else if (connectAccumulator.length > 0) {
+                            const updatedAccumulator = [ ...connectAccumulator, node.ordinal ];
+                            dispatch(addEdgeThunk({ connectAccumulator: updatedAccumulator, components }));
+                        }
+                    }
                 }
             }
         };
 
-        const callback = canvasClickEventListener(strategy, components);
+        const callback = canvasClickEventListener(strategy, components, connectAccumulator);
 
         const canvas : any = canvasRef.current
         canvas.addEventListener('click', callback);
@@ -62,7 +78,7 @@ export default function Canvas({ canvasDrawer, graphDrawer } : CanvasProps) {
         return () => {
             canvas.removeEventListener('click', callback);
         }
-    }, [strategy, components]);
+    }, [strategy, components, connectAccumulator]);
 
     return (
         <CanvasContainer>
