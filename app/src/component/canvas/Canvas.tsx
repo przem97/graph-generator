@@ -1,14 +1,13 @@
 import React, { useRef, useEffect, useLayoutEffect } from 'react';
 import { IGridDrawer, IGraphDrawer } from '../../draw';
-import Node, { NodeType } from '../../model/node';
+import { NodeType } from '../../model/node';
 import { ComponentType } from '../../model/component';
 import { NodeDrawingStrategy } from '../../draw/strategy/node.draw.strategy';
-import { addNode, removeNode, connect } from '../../redux/reducers'
 import { NodeUtils } from '../../model/util/nodeUtils';
-import { ComponentUtils } from '../../model/util/componentUtils';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { initCanvas } from '../../draw/standard/canvas.drawer';
 import { styled } from 'styled-components';
+import { removeNode } from '../../redux/thunks/vertex/removeNodeThunk';
 
 type CanvasProps = {
   canvasDrawer: IGridDrawer,
@@ -23,32 +22,6 @@ export default function Canvas({ canvasDrawer, graphDrawer } : CanvasProps) {
 
     const dispatch = useAppDispatch();
 
-    const canvasClickEventListener = (strategy: NodeDrawingStrategy) => {
-        return (event : PointerEvent) => {
-            const canvas : any = canvasRef.current;
-            const node: NodeType = NodeUtils.fromClickEvent(event, canvas);
-
-            if (NodeDrawingStrategy.Add == strategy) {
-                dispatch(addNode(Node.create(node.x, node.y, -1)));
-            }
-    
-            if (NodeDrawingStrategy.Remove == strategy) {
-                dispatch(removeNode(Node.create(node.x, node.y, -1)));
-            }
-    
-            if (NodeDrawingStrategy.Edit == strategy) {
-                // TODO
-            }
-    
-            if (NodeDrawingStrategy.Connect == strategy) {
-                const ordinal = ComponentUtils.findOrdinal(node, components);
-                if (ordinal != -1) {
-                    dispatch(connect(ordinal));
-                }
-            }
-        }
-    }
-
     useLayoutEffect(() => {
         initCanvas(canvasRef, canvasDrawer);
 
@@ -60,7 +33,7 @@ export default function Canvas({ canvasDrawer, graphDrawer } : CanvasProps) {
             const canvas : any = canvasRef.current;
             graphDrawer.drawComponents(canvas, components);
         };
-        
+
         window.addEventListener('resize', canvasResizeEvent);
 
         return () => {
@@ -69,7 +42,18 @@ export default function Canvas({ canvasDrawer, graphDrawer } : CanvasProps) {
     }, [components]);
 
     useEffect(() => {
-        const callback = canvasClickEventListener(strategy);
+        const canvasClickEventListener = (strategy: NodeDrawingStrategy, components: ComponentType[]) => {
+            return (event : PointerEvent) => {
+                const canvas : any = canvasRef.current;
+                const targetEventNode: NodeType = NodeUtils.fromClickEvent(event, canvas);
+    
+                if (NodeDrawingStrategy.Remove == strategy) {
+                    dispatch(removeNode({ targetEventNode, components }));
+                }
+            }
+        };
+
+        const callback = canvasClickEventListener(strategy, components);
 
         const canvas : any = canvasRef.current
         canvas.addEventListener('click', callback);
@@ -77,7 +61,7 @@ export default function Canvas({ canvasDrawer, graphDrawer } : CanvasProps) {
         return () => {
             canvas.removeEventListener('click', callback);
         }
-    }, [strategy]);
+    }, [strategy, components]);
 
     return (
         <CanvasContainer>

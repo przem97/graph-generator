@@ -6,5 +6,3 @@ export const rootReducer = combineReducers({
     strategyReducer,
     componentsReducer
 });
-
-export type RootState = ReturnType<typeof rootReducer>;
