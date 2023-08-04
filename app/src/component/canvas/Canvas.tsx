@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { initCanvas } from '../../draw/standard/canvas.drawer';
 import { styled } from 'styled-components';
 import { removeNode } from '../../redux/thunks/vertex/removeNodeThunk';
+import { selectComponents } from '../../redux/reducers/component/componentSlice';
 
 type CanvasProps = {
   canvasDrawer: IGridDrawer,
@@ -18,7 +19,7 @@ export default function Canvas({ canvasDrawer, graphDrawer } : CanvasProps) {
     const canvasRef = useRef(null);
 
     const strategy: NodeDrawingStrategy = useAppSelector(state => state.strategyReducer.strategy);
-    const components: ComponentType[] = useAppSelector(state => state.componentsReducer.components);
+    const components: ComponentType[] = useAppSelector(selectComponents);
 
     const dispatch = useAppDispatch();
 

@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { ComponentType } from '../../../model/component';
 import { removeNode } from '../../thunks/vertex/removeNodeThunk';
+import { RootState } from '../../store/store';
 
 export type ComponentStateType = {
     components: ComponentType[]
@@ -32,5 +33,6 @@ const componentSlice = createSlice({
     }
 });
 
+export const selectComponents = (state: RootState) => state.componentsReducer.components;
 export const { saveComponents } = componentSlice.actions;
 export default componentSlice.reducer;
