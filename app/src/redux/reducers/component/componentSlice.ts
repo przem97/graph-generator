@@ -51,5 +51,8 @@ const componentSlice = createSlice({
 });
 
 export const selectComponents = (state: RootState) => state.componentsReducer.components;
+export const selectVerticesNumber = (state: RootState) => state.componentsReducer.components.reduce((acc, crr) => acc + crr.vertices.length, 0);
+export const selectEdgesNumber = (state: RootState) => state.componentsReducer.components.reduce((acc, crr) => acc + crr.edges.length, 0);
+export const selectComponentsNumber = (state: RootState) => state.componentsReducer.components.length;
 export const { saveComponents, addComponentWithNode } = componentSlice.actions;
 export default componentSlice.reducer;

@@ -4,7 +4,7 @@ import GridDrawer from '../../draw/standard/grid.drawer';
 import GraphDrawer from '../../draw/standard/graph.drawer';
 import { IGridDrawer, IGraphDrawer } from '../../draw';
 import { styled } from 'styled-components';
-import CanvasStateStats from '../canvasState/CanvasState';
+import CanvasStateStats from '../canvasStats/CanvasStats';
 
 export default function Main() {
     const drawer: IGridDrawer = new GridDrawer();
