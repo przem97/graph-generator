@@ -4,6 +4,7 @@ import { DEFAULT_HEADER_HEIGHT } from '../component/header/Header';
 import { DEFAULT_SIDEBAR_WIDTH } from '../component/sidebar/Sidebar';
 import { LEADING } from '../draw/standard/grid.drawer';
 import { RADIUS } from '../draw/standard/graph.drawer';
+import _ from 'lodash';
 
 export type NodeType = {
     ordinal: number;
@@ -60,4 +61,17 @@ export default class Node {
         const radius = toRealRadius(RADIUS, LEADING);
         return Math.pow((current.x - target.x), 2) + Math.pow((current.y - target.y), 2) <= Math.pow(radius, 2);
     };
+
+    static getNextNodeOrdinal(components: ComponentType[]): number {
+        let maxOrdinal = 0;
+
+        for (let component of components) {
+            let foundNode: NodeType | undefined = _.maxBy(component.vertices, (node: NodeType) => node.ordinal);
+            if (foundNode && foundNode.ordinal > maxOrdinal) {
+                maxOrdinal = foundNode.ordinal;
+            }
+        }
+
+        return maxOrdinal + 1;
+    }
 }

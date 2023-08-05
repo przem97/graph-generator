@@ -1,14 +1,14 @@
 import React, { useRef, useEffect, useLayoutEffect } from 'react';
 import { IGridDrawer, IGraphDrawer } from '../../draw';
 import { NodeType } from '../../model/node';
-import { ComponentType } from '../../model/component';
+import Component, { ComponentType } from '../../model/component';
 import { NodeDrawingStrategy } from '../../draw/strategy/node.draw.strategy';
 import Node from '../../model/node';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { initCanvas } from '../../draw/standard/canvas.drawer';
 import { styled } from 'styled-components';
 import { removeNode } from '../../redux/thunks/vertex/removeNodeThunk';
-import { selectComponents } from '../../redux/reducers/component/componentSlice';
+import { selectComponents, addComponentWithNode } from '../../redux/reducers/component/componentSlice';
 import { connectAccumulatorPush, selectConnectAccumulator } from '../../redux/reducers/edge/edgeSlice';
 import { selectStrategy } from '../../redux/reducers/strategy/draw/strategySlice';
 import { addEdgeThunk } from '../../redux/thunks/edge/addEdgeThunk';
@@ -66,6 +66,8 @@ export default function Canvas({ canvasDrawer, graphDrawer } : CanvasProps) {
                             dispatch(addEdgeThunk({ connectAccumulator: updatedAccumulator, components }));
                         }
                     }
+                } else if (strategy == NodeDrawingStrategy.Add) {
+                    dispatch(addComponentWithNode({ vertex: targetEventNode }));
                 }
             }
         };
