@@ -2,40 +2,44 @@ import React from 'react';
 
 import { styled } from 'styled-components';
 import { useDispatch } from 'react-redux';
-import { setAddStrategy, setRemoveStrategy, setEditStrategy, setConnectStrategy } from '../../redux/reducers';
+import { setStrategy } from '../../redux/reducers';
 import { DEFAULT_HEADER_HEIGHT } from '../header/Header';
 import { CustomApplicationButton } from '../common/Button';
+import { NodeDrawingStrategy } from '../../draw/strategy/node.draw.strategy';
+import { clearConnectAccumulator } from '../../redux/reducers';
 
 export const DEFAULT_SIDEBAR_WIDTH = 70;
 
 export default function Sidebar() {
     const dispatch = useDispatch();
 
-    const addAction = () => dispatch(setAddStrategy())
-    const removeAction = () => dispatch(setRemoveStrategy());
-    const editAction = () => dispatch(setEditStrategy());
-    const connectAction = () => dispatch(setConnectStrategy());
+    const changeStrategyAction = (action: NodeDrawingStrategy) => {
+        if (action !== NodeDrawingStrategy.Connect) {
+            dispatch(clearConnectAccumulator());
+        }
+        dispatch(setStrategy({ strategy: action }));
+    }
 
     const sidebarButtonProps = { width: '80%', height: '90%' }
     return (
         <SidebarContainer sidebarwidth={DEFAULT_SIDEBAR_WIDTH} top={DEFAULT_HEADER_HEIGHT}>
             <GraphActionContainer>
-                <CustomApplicationButton id="add-button" onClick={addAction} {...sidebarButtonProps}>
+                <CustomApplicationButton id="add-button" onClick={() => changeStrategyAction(NodeDrawingStrategy.Add)} {...sidebarButtonProps}>
                     Add
                 </CustomApplicationButton>
             </GraphActionContainer>
             <GraphActionContainer>
-                <CustomApplicationButton id="remove-button" onClick={removeAction} {...sidebarButtonProps}>
+                <CustomApplicationButton id="remove-button" onClick={() => changeStrategyAction(NodeDrawingStrategy.Remove)} {...sidebarButtonProps}>
                     Remove
                 </CustomApplicationButton>
             </GraphActionContainer>
             <GraphActionContainer>
-                <CustomApplicationButton id="edit-button" onClick={editAction} {...sidebarButtonProps}>
+                <CustomApplicationButton id="edit-button" onClick={() => changeStrategyAction(NodeDrawingStrategy.Edit)} {...sidebarButtonProps}>
                     Edit
                 </CustomApplicationButton>
             </GraphActionContainer>
             <GraphActionContainer>
-                <CustomApplicationButton id="connect-button" onClick={connectAction} {...sidebarButtonProps}>
+                <CustomApplicationButton id="connect-button" onClick={() => changeStrategyAction(NodeDrawingStrategy.Connect)} {...sidebarButtonProps}>
                     Connect
                 </CustomApplicationButton>
             </GraphActionContainer>

@@ -9,9 +9,10 @@ import { initCanvas } from '../../draw/standard/canvas.drawer';
 import { styled } from 'styled-components';
 import { removeNode } from '../../redux/thunks/vertex/removeNodeThunk';
 import { selectComponents, addComponentWithNode } from '../../redux/reducers/component/componentSlice';
-import { connectAccumulatorPush, selectConnectAccumulator } from '../../redux/reducers/edge/edgeSlice';
+import { connectAccumulatorPush, selectConnectAccumulator, selectConnectNodeAccumulator } from '../../redux/reducers';
 import { selectStrategy } from '../../redux/reducers/strategy/draw/strategySlice';
 import { addEdgeThunk } from '../../redux/thunks/edge/addEdgeThunk';
+import { RADIUS } from '../../draw/standard/graph.drawer';
 
 type CanvasProps = {
   canvasDrawer: IGridDrawer,
@@ -24,6 +25,7 @@ export default function Canvas({ canvasDrawer, graphDrawer } : CanvasProps) {
     const strategy: NodeDrawingStrategy = useAppSelector(selectStrategy);
     const components: ComponentType[] = useAppSelector(selectComponents);
     const connectAccumulator: number[] = useAppSelector(selectConnectAccumulator);
+    const nodesAccumulator: NodeType[] = useAppSelector(selectConnectNodeAccumulator);
 
     const dispatch = useAppDispatch();
 
@@ -76,11 +78,31 @@ export default function Canvas({ canvasDrawer, graphDrawer } : CanvasProps) {
 
         const canvas : any = canvasRef.current
         canvas.addEventListener('click', callback);
-
         return () => {
             canvas.removeEventListener('click', callback);
         }
     }, [strategy, components, connectAccumulator]);
+    
+    useEffect(() => { 
+        if (nodesAccumulator.length > 0) {
+            const canvas : any = canvasRef.current;
+            const callback = (event : PointerEvent) => {
+                initCanvas(canvasRef, canvasDrawer);
+                const canvas : any = canvasRef.current;
+                graphDrawer.drawComponents(canvas, components);
+                graphDrawer.drawEdge(canvas, nodesAccumulator[0], Node.fromCanvasClickEvent(event, canvas), RADIUS);
+            };
+
+            canvas.addEventListener('mousemove', callback);
+            return () => {
+                canvas.removeEventListener('mousemove', callback);
+            }
+        } else {
+            initCanvas(canvasRef, canvasDrawer);
+            const canvas : any = canvasRef.current;
+            graphDrawer.drawComponents(canvas, components);
+        }
+    }, [nodesAccumulator]);
 
     return (
         <CanvasContainer>

@@ -7,4 +7,6 @@ export interface IGraphDrawer {
     drawNodes(canvas: HTMLCanvasElement, nodesList: NodeType[]): void;
 
     drawComponents(canvas: HTMLCanvasElement, componentsList: ComponentType[]): void;
+
+    drawEdge(canvas: HTMLCanvasElement, from: NodeType, to: NodeType, cutLength: number | undefined): void;
 }

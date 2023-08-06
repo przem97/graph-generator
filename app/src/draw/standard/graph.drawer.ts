@@ -51,7 +51,7 @@ export default class GraphDrawer implements IGraphDrawer {
         }
     }
 
-    drawEdge(canvas: HTMLCanvasElement, from: NodeType, to: NodeType): void {
+    drawEdge(canvas: HTMLCanvasElement, from: NodeType, to: NodeType, cutLength: number | undefined = undefined): void {
         const context : CanvasRenderingContext2D | null = canvas.getContext('2d');
 
         if (context) {
@@ -61,8 +61,21 @@ export default class GraphDrawer implements IGraphDrawer {
 
             context.fillStyle = "#000000";
             context.beginPath();
-            context.moveTo(cssCanvasFromNode.x, cssCanvasFromNode.y);
-            context.lineTo(cssCanvasToNode.x, cssCanvasToNode.y);
+            
+            if (cutLength) {
+                if (Math.pow(cssCanvasToNode.x - cssCanvasFromNode.x, 2) + Math.pow(cssCanvasToNode.y - cssCanvasFromNode.y, 2) > Math.pow(cutLength, 2)) {
+                    const hypotenuse = Math.sqrt(Math.pow(cssCanvasToNode.x - cssCanvasFromNode.x, 2) + Math.pow(cssCanvasToNode.y - cssCanvasFromNode.y, 2));
+                    const cosinus = (cssCanvasToNode.y - cssCanvasFromNode.y) / hypotenuse;
+                    const sinus = (cssCanvasToNode.x - cssCanvasFromNode.x) / hypotenuse;
+                    const xCutLength = cutLength * sinus;
+                    const yCutLength = cutLength * cosinus;
+                    context.moveTo(cssCanvasFromNode.x + xCutLength, cssCanvasFromNode.y + yCutLength);
+                    context.lineTo(cssCanvasToNode.x, cssCanvasToNode.y);
+                }
+            } else {
+                context.moveTo(cssCanvasFromNode.x, cssCanvasFromNode.y);
+                context.lineTo(cssCanvasToNode.x, cssCanvasToNode.y);
+            }
             context.stroke();
         }
     }
