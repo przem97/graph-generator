@@ -1,13 +1,19 @@
 import express, { Router, Request, Response } from 'express';
 import Component from '../models/component';
-import GraphInitializer from '../services/graphInitializer';
-import CoordinatesInitializer from '../services/coordinatesInitializer';
-import IGraphInitializer from '../services/interface/graphInitializer.interface';
-import ICoordinatesInitializer from '../services/interface/coordinatesInitializer.interface';
+import EdgeInitializer from '../services/initializer/edge/edgeInitializer';
+import GraphInitializer from '../services/initializer/graph/graphInitializer';
+import VertexInitializer from '../services/initializer/vertex/vertexInitializer';
+import ComponentInitializer from '../services/initializer/component/componentInitializer';
+import CoordinatesInitializer from '../services/initializer/coordinates/coordinatesInitializer';
+import IEdgeInitializer from '../services/initializer/edge/edgeInitializer.interface';
+import IGraphInitializer from '../services/initializer/graph/graphInitializer.interface';
+import IVertexInitializer from '../services/initializer/vertex/vertexInitializer.interface';
+import IComponentInitializer from '../services/initializer/component/componentInitializer.interface';
+import ICoordinatesInitializer from '../services/initializer/coordinates/coordinatesInitializer.interface';
 
 const router: Router = express.Router()
 
-router.get('/initialize', (req: Request, res: Response) => {
+router.post('/initialize', (req: Request, res: Response) => {
     res.setHeader('Content-Type', 'application/json');
 
     let totalVertices = req.body.totalVertices ? req.body.totalVertices : 0;
@@ -22,20 +28,23 @@ router.get('/initialize', (req: Request, res: Response) => {
     let yAxisLowerBound = req.body.yAxisLowerBound ? req.body.yAxisLowerBound : -100;
     let yAxisUpperBound = req.body.yAxisUpperBound ? req.body.yAxisUpperBound : 100;
 
+    let startOrdinal = req.body.startOrdinal ? req.body.startOrdinal : 0;
+
+    let componentInitializer: IComponentInitializer = new ComponentInitializer(totalComponents);
+    let edgeInitializer: IEdgeInitializer = new EdgeInitializer(totalEdges, edgeWeightLowerBound, edgeWeightUpperBound);
+    let vertexInitializer: IVertexInitializer = new VertexInitializer(totalVertices, startOrdinal);
+
     let graphInitializer: IGraphInitializer = new GraphInitializer(
-        totalVertices,
-        totalEdges,
-        totalComponents,
-        edgeWeightLowerBound,
-        edgeWeightUpperBound
+        componentInitializer,
+        edgeInitializer,
+        vertexInitializer
     );
     
     let coordinatesInitializer: ICoordinatesInitializer = new CoordinatesInitializer(xAxisLowerBound,
         xAxisUpperBound, yAxisLowerBound, yAxisUpperBound);
 
-    const components: Array<Component> = graphInitializer.initializeGraph(totalVertices, totalEdges, totalComponents)
-
-    coordinatesInitializer.initializeCoordinates(components); 
+    let components: Array<Component> = graphInitializer.initializeGraph();
+    components = coordinatesInitializer.initializeCoordinates(components); 
 
     res.send({ "graph": {
         "components": components

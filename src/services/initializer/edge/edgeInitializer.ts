@@ -1,56 +1,21 @@
-import _ from 'lodash'
-import Component from '../models/component'
-import Vertex from '../models/vertex';
-import GraphManager from '../utils/graphManager'
-import IGraphManager from '../utils/graphManager'
-import IGraphInitializer from './interface/graphInitializer.interface'
+import _ from "lodash";
+import Edge from "../../../models/edge";
+import Component from "../../../models/component";
+import IComponentManager from "../../../utils/component/manager/componentManager.interface";
+import IEdgeInitializer from "./edgeInitializer.interface";
+import SetBasedComponentManager from "../../../utils/component/manager/setBasedComponentManager";
 
-class GraphInitializer implements IGraphInitializer {
-    readonly totalVertices: number;
+export default class EdgeInitializer implements IEdgeInitializer {
     readonly totalEdges: number;
-    readonly totalComponents: number;
     readonly edgeWeightLowerBound: number;
     readonly edgeWeightUpperBound: number;
 
-    constructor(
-        totalVertices: number,
-        totalEdges: number,
-        totalComponents: number,
-        edgeWeightLowerBound: number,
-        edgeWeightUpperBound: number
-    ) {
-        this.totalVertices = totalVertices;
+    constructor(totalEdges: number,
+                edgeWeightLowerBound: number,
+                edgeWeightUpperBound: number) {
         this.totalEdges = totalEdges;
-        this.totalComponents = totalComponents;
         this.edgeWeightLowerBound = edgeWeightLowerBound;
         this.edgeWeightUpperBound = edgeWeightUpperBound;
-    }
-
-    initializeGraph(): Array<Component> { 
-        let components = this.initializeComponents(this.totalComponents)
-        components = this.initializeVertices(components, this.totalVertices)
-        return this.initializeEdges(components, this.totalEdges)
-    }
-
-    initializeComponents(totalComponents: number): Array<Component> {
-        return Array.from({length: totalComponents}, () => {
-            return new Component()
-        })
-    }
-
-    initializeVertices(components: Array<Component>, totalVertices: number): Array<Component> {
-        // populate one vertex per component
-        for (let i = 0; i < components.length; i += 1) {
-            components[i].vertices.push(new Vertex(i));
-        }
-
-        // fill components randomly with vertices
-        for (let i = components.length; i < totalVertices; i += 1) {
-            let componentIndex = Math.floor(Math.random() * components.length)
-            components[componentIndex].vertices.push(new Vertex(i))
-        }
-        
-        return components
     }
 
     /**
@@ -62,17 +27,18 @@ class GraphInitializer implements IGraphInitializer {
      * @param {Number} totalEdges - Total number of edges which has to be populated within the graph
      * @returns 
      */
-    initializeEdges(components: Array<Component>, totalEdges: number): Array<Component> {
+    initializeEdges(components: Component[]): Array<Component> {
         let currentEdges = 0
-        
+        let edgesNumber: number[] = [];
+
         // populate minimum number of edges necessary to create a component
         _.forEach(components, (component) => {
             let minimumEdgesNumber = component.vertices.length - 1
             currentEdges += minimumEdgesNumber
-            component.edgesNumber = minimumEdgesNumber
+            edgesNumber.push(minimumEdgesNumber);
         })
 
-        const remainingEdgesNumber = totalEdges - currentEdges
+        const remainingEdgesNumber = this.totalEdges - currentEdges
         const availableComponents = _.range(components.length).filter((index) => components[index].vertices.length > 2)
         
         // randomly populate remaining number of edges within the components
@@ -81,44 +47,49 @@ class GraphInitializer implements IGraphInitializer {
 
             // get random index of not yet fully bucket
             let randomIndex = _.random(availableComponents.length - 1)
-            components[availableComponents[randomIndex]].edgesNumber += 1
+            edgesNumber[availableComponents[randomIndex]] += 1
 
             let verticesNumber = components[availableComponents[randomIndex]].vertices.length
             // if bucket is full then remove it from the list of available buckets
-            if (components[availableComponents[randomIndex]].edgesNumber >= (verticesNumber * (verticesNumber - 1) / 2)) {
+            if (edgesNumber[availableComponents[randomIndex]] >= (verticesNumber * (verticesNumber - 1) / 2)) {
                 availableComponents.splice(randomIndex, 1)
             }
         }
-        
+
+        const resultComponents: Component[] = [];
+
         // initialize edges within each component
         for (let i = 0; i < components.length; i += 1) {
-            let graphManager: IGraphManager = new GraphManager(components[i].vertices)
+            let graphManager: IComponentManager = new SetBasedComponentManager(components[i].vertices)
             
             // initialize tree in order to have complete component
             let edgesInitialized = graphManager.initializeTree()
-            let size = components[i].edgesNumber - edgesInitialized
+            let size = edgesNumber[i] - edgesInitialized
             
             // add the remaining number of edges randomly
             graphManager.addRandomEdgesSize(size)
             
-            components[i].edges = graphManager.getEdges()
+            resultComponents.push(new Component(graphManager.getEdges(), [ ...components[i].vertices ]));
         }
 
-        return this.initializeWeights(components);
+        return resultComponents;
     }
 
-    initializeWeights(components: Array<Component>): Array<Component> {
+    initializeWeights(components: Array<Component>): Component[] {
+        const newComponents: Component[] = [];
+
         for (let i = 0; i < components.length; i += 1) {
             let component = components[i];
+            let edges: Edge[] = [];
             for (let j = 0; j < component.edges.length; j += 1) {
                 let randomWeight = _.random(this.edgeWeightLowerBound, this.edgeWeightUpperBound, true);
-                component.edges[j].weight = _.round(randomWeight, 2);
+                const weight = _.round(randomWeight, 2);
+                edges.push(new Edge(component.edges[j].startVertex, component.edges[j].endVertex, weight));
             }
+
+            newComponents.push(new Component(edges, [ ...component.vertices ]));
         }
 
-        return components;
+        return newComponents;
     }
 }
-
-
-export default GraphInitializer
