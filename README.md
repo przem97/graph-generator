@@ -17,16 +17,17 @@ npm run watch
 ```
 which starts the deamon monitoring the application source code and doing a live reloading.
 
-The other way to run the backend is to build the Docker image and then starting the container.
+The other way to run the backend is to run the docker-compose.
 
-Build the image:
+Run the application container:
+
 ```bash
-docker build -t graph-solver-backend .
+docker-compose -f docker-compose.dev.yaml up
 ```
-Run the container:
 
+Check the configuration of docker-compose:
 ```bash
-docker run -d -p 3000:3080 graph-solver-backend
+docker-compose -f docker-compose.dev.yaml config
 ```
 
 You can configure default application port in the <em>.env</em> file.
