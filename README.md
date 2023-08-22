@@ -1,7 +1,6 @@
 # graph-solver
 A simple project for graph generation and playground for different graph algorithms.
 
-
 # How to run
 
 ## Starting the backend
@@ -28,6 +27,12 @@ docker-compose -f docker-compose.dev.yaml up
 Check the configuration of docker-compose:
 ```bash
 docker-compose -f docker-compose.dev.yaml config
+```
+
+Run only the mongodb service:
+
+```bash
+docker-compose -f docker-compose.dev.yaml up -d mongodb
 ```
 
 You can configure default application port in the <em>.env</em> file.
