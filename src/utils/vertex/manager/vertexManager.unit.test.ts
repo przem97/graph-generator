@@ -46,15 +46,15 @@ describe('removeVertex() method tests', () => {
         
         for (const component of resultComponents) {
             if (component.vertices.length === 1) {
-                expect(component.vertices[0].ordinal).toEqual(100);
+                expect(component.vertices[0].id).toEqual(100);
                 expect(component.edges.length).toEqual(0);
             } else if (component.vertices.length === 3) {
                 expect(component.edges.length).toEqual(2);
-                let resultOrdinals = component.vertices.map(v => v.ordinal);
+                let resultIds = component.vertices.map(v => v.id);
 
-                expect(resultOrdinals).toContain(300);
-                expect(resultOrdinals).toContain(400);
-                expect(resultOrdinals).toContain(500);
+                expect(resultIds).toContain(300);
+                expect(resultIds).toContain(400);
+                expect(resultIds).toContain(500);
             }
         }
     });
@@ -71,12 +71,12 @@ describe('removeVertex() method tests', () => {
         expect(resultComponents.length).toEqual(1);
         expect(resultComponents[0].vertices.length).toEqual(5);
         expect(resultComponents[0].edges.length).toEqual(4)
-        let resultOrdinals = resultComponents[0].vertices.map(v => v.ordinal);
+        let resultIds = resultComponents[0].vertices.map(v => v.id);
 
-        expect(resultOrdinals).toContain(100);
-        expect(resultOrdinals).toContain(200);
-        expect(resultOrdinals).toContain(300);
-        expect(resultOrdinals).toContain(400);
-        expect(resultOrdinals).toContain(500);
+        expect(resultIds).toContain(100);
+        expect(resultIds).toContain(200);
+        expect(resultIds).toContain(300);
+        expect(resultIds).toContain(400);
+        expect(resultIds).toContain(500);
     });
 });

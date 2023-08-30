@@ -21,7 +21,7 @@ class CoordinatesInitializer implements ICoordinatesInitializer {
         for (let i = 0; i < component.vertices.length; i++) {
             const currentVertex = component.vertices[i];
             resultVertices.push(new Vertex(
-                currentVertex.ordinal,
+                currentVertex.id,
                 _.round(_.random(this.xLowerBound, this.xUpperBound, true), 2),
                 _.round(_.random(this.yLowerBound, this.yUpperBound, true), 2)
             ));

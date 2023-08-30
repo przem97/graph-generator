@@ -32,7 +32,7 @@ class SetBasedComponentManager implements IComponentManager {
         this.vertexToIndex = new Map<number, number>();
         
         for (let i = 0; i < this.vertices.length; i += 1) {
-            this.vertexToIndex.set(this.vertices[i].ordinal, i);
+            this.vertexToIndex.set(this.vertices[i].id, i);
         }
 
         this.numbers = new Set();
@@ -64,8 +64,8 @@ class SetBasedComponentManager implements IComponentManager {
     }
 
     numberToEdge(number: number): Edge {
-        const startVertex = this.vertices[(number / this.vertices.length) >> 0].ordinal;
-        const endVertex = this.vertices[number % this.vertices.length].ordinal;
+        const startVertex = this.vertices[(number / this.vertices.length) >> 0].id;
+        const endVertex = this.vertices[number % this.vertices.length].id;
         const weight = this.edgeWeight.get(number);
         return new Edge(startVertex, endVertex, weight);
     }
@@ -77,7 +77,7 @@ class SetBasedComponentManager implements IComponentManager {
 
     initializeTree(): number {
         for (let i = 0; i < (this.vertices.length - 1); i += 1) {
-            let edge: Edge = new Edge(this.vertices[i].ordinal, this.vertices[i + 1].ordinal)
+            let edge: Edge = new Edge(this.vertices[i].id, this.vertices[i + 1].id)
             this.addEdge(edge)
         }
         return this.vertices.length - 1
@@ -109,7 +109,7 @@ class SetBasedComponentManager implements IComponentManager {
     }
 
     hasVertex(vertex: Vertex): Boolean {
-        return this.vertexToIndex.has(vertex.ordinal);
+        return this.vertexToIndex.has(vertex.id);
     }
 
     removeEdge(edge: Edge): Boolean {

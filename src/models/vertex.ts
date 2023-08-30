@@ -1,12 +1,12 @@
 import { Request } from "express";
 
 class Vertex {
-    readonly ordinal: number;
+    readonly id: number;
     readonly x: number;
     readonly y: number;
 
-    constructor(ordinal: number, x: number = 0, y: number = 0) {
-        this.ordinal = ordinal;
+    constructor(id: number, x: number = 0, y: number = 0) {
+        this.id = id;
         this.x = x;
         this.y = y;
     }

@@ -21,11 +21,11 @@ class Edge {
     }
 
     hasVertex(vertex: Vertex): Boolean {
-        return this.startVertex === vertex.ordinal || this.endVertex === vertex.ordinal;
+        return this.startVertex === vertex.id || this.endVertex === vertex.id;
     }
 
     static fromVertices(startVertex: Vertex, endVertex: Vertex, weight: number = 0): Edge {
-        return new Edge(startVertex.ordinal, endVertex.ordinal, weight);
+        return new Edge(startVertex.id, endVertex.id, weight);
     }
 
     static fromRequest(req: Request): Edge {

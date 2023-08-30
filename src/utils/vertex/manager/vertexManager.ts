@@ -15,7 +15,7 @@ class VertexManager implements IVertexManager {
                 const newEdges: Edge[] = [];
 
                 for (const v of manager.getVertices()) {
-                    if (v.ordinal !== vertex.ordinal) {
+                    if (v.id !== vertex.id) {
                         newVertices.push(v);
                     }
                 }

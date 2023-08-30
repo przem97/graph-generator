@@ -103,17 +103,17 @@ describe("3 components and 21 vertices", () => {
     });
 });
 
-describe("start ordinal set to 94 and generate 5 components and 12 vertices", () => {
+describe("startId set to 94 and generate 5 components and 12 vertices", () => {
     const totalVertices: number = 12;
     const totalComponents: number = 5;
-    const startOrdinal = 94;
+    const startId = 94;
 
     beforeAll(() => {
         componentInitializer = new ComponentInitializer(totalComponents);
-        vertexInitializer = new VertexInitializer(totalVertices, startOrdinal);
+        vertexInitializer = new VertexInitializer(totalVertices, startId);
     });
 
-    it('should initialize 5 components with total of 12 vertices for startOrdinal set to 94', () => {
+    it('should initialize 5 components with total of 12 vertices for startId set to 94', () => {
         // given
 
         // when
@@ -127,7 +127,7 @@ describe("start ordinal set to 94 and generate 5 components and 12 vertices", ()
             expect(component.vertices.length).toBeGreaterThan(0);
 
             for (const vertex of component.vertices) {
-                expect(vertex.ordinal).toBeGreaterThanOrEqual(startOrdinal);
+                expect(vertex.id).toBeGreaterThanOrEqual(startId);
             }
         }
     });
