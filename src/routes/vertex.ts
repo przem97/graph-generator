@@ -7,9 +7,36 @@ import SetBasedComponentManager from '../utils/component/manager/setBasedCompone
 
 const router: Router = express.Router();
 
-const VERTEX = 'vertex';
-
-router.put(`/${VERTEX}`, (req: Request, res: Response) => {
+/**
+ * @openapi
+ * /graphs/vertices:
+ *   put:
+ *     description: Add the vertex to the graph
+ *     tags:
+ *       - VerticesAPI
+ *     requestBody:
+ *        description: A graph and a vertex to add
+ *        content:
+ *          appliaction/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                graph:
+ *                  $ref: '#components/schemas/graph'
+ *                vertex:
+ *                  $ref: '#components/schemas/vertex'
+ *     responses:
+ *        200:
+ *          description: Returns a graph with newly added vertex
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  graph:
+ *                    $ref: '#/components/schemas/graph'
+ */
+router.put('/vertices', (req: Request, res: Response) => {
     const components: Component[] = Component.componentsFromRequest(req);
     const vertex: Vertex = Vertex.fromRequest(req);
 
@@ -37,7 +64,36 @@ router.put(`/${VERTEX}`, (req: Request, res: Response) => {
     }});
 });
 
-router.delete(`/${VERTEX}`, (req: Request, res: Response) => {
+/**
+ * @openapi
+ * /graphs/vertices:
+ *   delete:
+ *     description: Remove the vertex from the graph
+ *     tags:
+ *       - VerticesAPI
+ *     requestBody:
+ *        description: A graph and a vertex to remove
+ *        content:
+ *          appliaction/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                graph:
+ *                  $ref: '#components/schemas/graph'
+ *                vertex:
+ *                  $ref: '#components/schemas/vertex'
+ *     responses:
+ *        200:
+ *          description: Returns a graph with removed vertex
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  graph:
+ *                    $ref: '#/components/schemas/graph'
+ */
+router.delete('/vertices', (req: Request, res: Response) => {
     const components: Component[] = Component.componentsFromRequest(req);
     const vertexToRemove: Vertex = Vertex.fromRequest(req);
 
