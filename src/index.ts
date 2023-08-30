@@ -10,6 +10,9 @@ import dotenv from 'dotenv';
 import { expand } from 'dotenv-expand';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
+import { options } from './api/api-docs';
 
 const dotenvConfig = dotenv.config();
 expand(dotenvConfig);
@@ -20,7 +23,7 @@ const port = process.env.PORT;
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use('/graph', initializer, splitter, merger, graph, edge, vertex);
+app.use('/graphs', initializer, splitter, merger, graph, edge, vertex);
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello from graph-solver!')
 })
@@ -33,3 +36,12 @@ async function main() {
 app.listen(port, () => {
     console.log(`graph-solver application listening on port: ${port}`)
 })
+
+const openapiSpecification = swaggerJsdoc(options);
+
+// OpenAPI UI
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(openapiSpecification)
+);
