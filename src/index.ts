@@ -23,7 +23,7 @@ const port = process.env.PORT;
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use('/graphs', initializer, splitter, merger, graph, edge, vertex);
+app.use('/v1/graphs', initializer, splitter, merger, graph, edge, vertex);
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello from graph-solver!')
 })
