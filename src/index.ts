@@ -1,6 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import bodyParser from 'body-parser';
-import initializer  from './routes/initializer';
+import initializer  from './routes/generator';
 import splitter from './routes/splitter';
 import merger from './routes/merger';
 import vertex from './routes/vertex';

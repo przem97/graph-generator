@@ -5,14 +5,19 @@ export const options = {
 			title: 'Graph-solver API Documentation',
 			version: '0.0.1'
 		},
+		servers: [
+			{
+				"url": "http://localhost:3000"
+			}
+		],
 		tags: [
 			{
 				name: 'EdgesAPI',
 				description: 'API for manupulating edges in the graph'
 			},
 			{
-				name: 'VerticesAPI',
-				description: 'API for manupulating vertices in the graph'
+				name: 'GeneratorAPI',
+				description: 'API for generating the graph'
 			},
 			{
 				name: 'MergeAPI',
@@ -21,8 +26,12 @@ export const options = {
 			{
 				name: 'SplitAPI',
 				description: 'API for splitting components withing the graph'
+			},
+			{
+				name: 'VerticesAPI',
+				description: 'API for manupulating vertices in the graph'
 			}
-			],
+		],
 		components: {
 			schemas: {
 				edge: {
