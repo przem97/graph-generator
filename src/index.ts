@@ -1,6 +1,6 @@
 import express, { Express, Request, Response } from 'express';
 import bodyParser from 'body-parser';
-import initializer  from './routes/generator';
+import generator  from './routes/generator';
 import splitter from './routes/splitter';
 import merger from './routes/merger';
 import vertex from './routes/vertex';
@@ -14,32 +14,48 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import { options } from './api/api-docs';
 
+// expanded dotenv configuration
 const dotenvConfig = dotenv.config();
 expand(dotenvConfig);
 
-const app: Express = express()
-const port = process.env.PORT;
+// application base configuration
+const PORT = process.env.PORT;
+const API_VERSION = 'v1';
+const GRAPHS_PATH = `/${API_VERSION}/graphs`;
 
+// application instance
+const app: Express = express();
+
+// base middleware configuration
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use('/v1/graphs', initializer, splitter, merger, graph, edge, vertex);
+// mount different routes
+app.use(GRAPHS_PATH, splitter);
+app.use(GRAPHS_PATH, merger);
+app.use(GRAPHS_PATH, graph);
+app.use(GRAPHS_PATH, edge);
+app.use(GRAPHS_PATH, vertex);
+app.use(GRAPHS_PATH, generator);
+
 app.get('/', (req: Request, res: Response) => {
-    res.send('Hello from graph-solver!')
+    res.redirect('/api-docs')
 })
 
+// setup mongoose connection
 main().catch((err) => console.log(err));
 async function main() {
   await mongoose.connect(process.env.MONGODB_URI || '');
 }
 
-app.listen(port, () => {
-    console.log(`graph-solver application listening on port: ${port}`)
+// start express application
+app.listen(PORT, () => {
+    console.log(`graph-solver application listening on port: ${PORT}`)
 })
 
+// OpenAPI realted configuration & serve Swagger UI
 const openapiSpecification = swaggerJsdoc(options);
 
-// OpenAPI UI
 app.use(
   "/api-docs",
   swaggerUi.serve,

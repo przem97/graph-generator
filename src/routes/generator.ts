@@ -13,7 +13,7 @@ import ICoordinatesInitializer from '../services/initializer/coordinates/coordin
 
 const router: Router = express.Router()
 
-router.use('/generate', (req, res, next) => {
+router.use('/', (req, res, next) => {
     if (!req.body.totalVertices) {
         res.status(405).send({ "message": "please specify 'totalVertices' parameter" });
     }
