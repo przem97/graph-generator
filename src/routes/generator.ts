@@ -13,6 +13,19 @@ import ICoordinatesInitializer from '../services/initializer/coordinates/coordin
 
 const router: Router = express.Router()
 
+router.use('/generate', (req, res, next) => {
+    if (!req.body.totalVertices) {
+        res.status(405).send({ "message": "please specify 'totalVertices' parameter" });
+    }
+    if (!req.body.totalEdges) {
+        res.status(405).send({ "message": "please specify 'totalEdges' parameter" });
+    }
+    if (!req.body.totalComponents) {
+        res.status(405).send({ "message": "please specify 'totalComponents' parameter" });
+    }
+    next();
+});
+
 /**
  * @openapi
  * /graphs/generate:
@@ -21,7 +34,7 @@ const router: Router = express.Router()
  *     tags: 
  *       - GeneratorAPI
  *     requestBody:
- *       description: tests
+ *       description: Bunch of metadata describing graph
  *       required: true
  *       content:
  *         application/json:
@@ -31,42 +44,52 @@ const router: Router = express.Router()
  *               totalVertices:
  *                 type: integer
  *                 example: 2
+ *                 required: true
  *               totalEdges:
  *                 type: integer
  *                 example: 3
+ *                 required: true
  *               totalComponents:
  *                 type: integer
  *                 example: 4
+ *                 required: true
  *               edgeWeightLowerBound:
  *                 type: number
  *                 format: double
  *                 example: 3.14
+ *                 default: 0
  *               edgeWeightUpperBound:
  *                 type: number
  *                 format: double
  *                 example: 3.15
+ *                 default: 10
  *               xAxisLowerBound:
  *                 type: number
  *                 format: double
  *                 example: -23.1
+ *                 default: -100
  *               xAxisUpperBound:
  *                 type: number
  *                 format: double
  *                 example: 16.4
+ *                 default: 100
  *               yAxisLowerBound:
  *                 type: number
  *                 format: double
  *                 example: -123.45
+ *                 default: -100
  *               yAxisUpperBound:
  *                 type: number
  *                 format: double
  *                 example: -100.06
+ *                 default: 100
  *               startId:
  *                 type: integer
  *                 example: 15
+ *                 default: 0
  *     responses:
  *       200:
- *         description:
+ *         description: Returns generated graph according to specified criteria
  *         content:
  *           application/json:
  *             schema:
@@ -74,13 +97,27 @@ const router: Router = express.Router()
  *               properties:
  *                 graph:
  *                   $ref: '#/components/schemas/graph'
+ *       405:
+ *         description: Graph metadata parameters are not specified
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   enum: 
+ *                     - please specify 'totalVertices' parameter
+ *                     - please specify 'totalEdges' parameter
+ *                     - please specify 'totalComponents' parameter
+ *                   example: please specify 'totalVertices' parameter
  */
 router.post('/generate', (req: Request, res: Response) => {
     res.setHeader('Content-Type', 'application/json');
 
-    let totalVertices = req.body.totalVertices ? req.body.totalVertices : 0;
-    let totalEdges = req.body.totalEdges ? req.body.totalEdges : 0;
-    let totalComponents = req.body.totalComponents ? req.body.totalComponents : 0;
+    let totalVertices = req.body.totalVertices;
+    let totalEdges = req.body.totalEdges;
+    let totalComponents = req.body.totalComponents;
 
     let edgeWeightLowerBound = req.body.edgeWeightLowerBound ? req.body.edgeWeightLowerBound : 0;
     let edgeWeightUpperBound = req.body.edgeWeightUpperBound ? req.body.edgeWeightUpperBound : 10;
