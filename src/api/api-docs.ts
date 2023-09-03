@@ -20,6 +20,10 @@ export const options = {
 				description: 'API for generating the graph'
 			},
 			{
+				name: 'GraphAPI',
+				description: 'API for persistent graph storage (CRUD)'
+			},
+			{
 				name: 'MergeAPI',
 				description: 'API for merging components withing the graph'
 			},
@@ -116,6 +120,35 @@ export const options = {
 							}
 						}
 					}
+				},
+				graphDTO: {
+					title: 'A graph DTO',
+					allOf: [
+						{
+							$ref: '#components/schemas/graph'
+						},
+						{
+							type: 'object',
+							properties: {
+								_id: {
+									type: 'string',
+									example: '64e4b75abba56caf30c7c9f0'
+								},
+								createdAt: {
+									type: 'string',
+									example: '2023-08-22T13:25:46.304Z'
+								},
+								updatedAt: {
+									type: 'string',
+									example: '2023-08-22T13:25:46.304Z'
+								},
+								__v: {
+									type: 'integer',
+									example: '0'
+								}
+							}
+						}
+					]
 				}
 			}
 		} 
